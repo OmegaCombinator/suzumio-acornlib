@@ -29,3 +29,22 @@
 {"goal":"diameter[M](s) <= b","proof":[]}
 {"goal":"diameter[M](s) <= b = is_set_upper_bound(distance_set[M](s), b)","proof":[]}
 {"goal":"diameter_le","proof":[]}
+{"goal":"is_set_upper_bound(distance_set[M](s), r + r)","proof":["not s ⊂ closed_ball(c, r)"]}
+{"goal":"diameter[M](s) <= r + r","proof":["not is_set_upper_bound(distance_set[M](s), r + r) or not has_diameter[M](s)","not has_diameter[M](s)"]}
+{"goal":"diameter_le_of_subset_closed_ball","proof":["not s ⊂ closed_ball(c, r) or not has_diameter[M](s)","has_diameter[M](s)","s ⊂ closed_ball(c, r)","not s ⊂ closed_ball(c, r)"]}
+{"goal":"exists(k0: M) { s.contains(k0) }","proof":["function(x0: M) { not x0 ∈ s }(x)"]}
+{"goal":"has_diameter[M](s) = (is_bounded[M](s) and exists(k0: M) { s.contains(k0) })","proof":["function[T0: MetricSpace](x0: Set[T0]) { (is_bounded[T0](x0) and exists(k0: T0) { k0 ∈ x0 }) = has_diameter[T0](x0) }[M](s)"]}
+{"goal":"has_diameter[M](s)","proof":["let w0: M satisfy { w0 ∈ s }","not (is_bounded[M](s) and exists(k0: M) { k0 ∈ s })","is_bounded[M](s)","not is_bounded[M](s)"]}
+{"goal":"has_diameter_of_bounded_contains","proof":["not x ∈ s or not is_bounded[M](s)","is_bounded[M](s)","x ∈ s","not x ∈ s"]}
+{"goal":"is_bounded[M](closed_ball(c, r))","proof":[]}
+{"goal":"closed_ball(c, r).contains(c)","proof":["r.is_negative"]}
+{"goal":"has_diameter[M](closed_ball(c, r))","proof":["not c ∈ closed_ball(c, r) or not is_bounded[M](closed_ball(c, r))","not c ∈ closed_ball(c, r)"]}
+{"goal":"closed_ball(c, r).subset(closed_ball(c, r))","proof":["function[T0](x0: Set[T0]) { x0 ⊂ x0 }[M](closed_ball(c, r))"]}
+{"goal":"diameter[M](closed_ball(c, r)) <= r + r","proof":["not closed_ball(c, r) ⊂ closed_ball(c, r) or not has_diameter[M](closed_ball(c, r))","not closed_ball(c, r) ⊂ closed_ball(c, r)"]}
+{"goal":"closed_ball_diameter_le","proof":["r.is_negative"]}
+{"goal":"is_bounded[M](open_ball(c, r))","proof":[]}
+{"goal":"open_ball(c, r).contains(c)","proof":["not r.is_positive"]}
+{"goal":"has_diameter[M](open_ball(c, r))","proof":["not c ∈ open_ball(c, r) or not is_bounded[M](open_ball(c, r))","not c ∈ open_ball(c, r)"]}
+{"goal":"open_ball(c, r).subset(closed_ball(c, r))","proof":[]}
+{"goal":"diameter[M](open_ball(c, r)) <= r + r","proof":["not open_ball(c, r) ⊂ closed_ball(c, r) or not has_diameter[M](open_ball(c, r))","not open_ball(c, r) ⊂ closed_ball(c, r)"]}
+{"goal":"open_ball_diameter_le","proof":["not r.is_positive"]}
