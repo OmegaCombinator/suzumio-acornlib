@@ -31,6 +31,15 @@
 {"goal":"a = D.0 or b = D.0","proof":[]}
 {"goal":"false","proof":[]}
 {"goal":"integral_domain_mul_nonzero","proof":[]}
+{"goal":"a * b = D.0 * b","proof":[]}
+{"goal":"D.0 * b = D.0","proof":["function[T0: lib(ring).Ring](x0: T0) { T0.0 * x0 = T0.0 }[D](b)"]}
+{"goal":"false","proof":[]}
+{"goal":"integral_domain_left_nonzero_of_mul_nonzero","proof":[]}
+{"goal":"a * b = a * D.0","proof":[]}
+{"goal":"a * D.0 = D.0","proof":["function[T0: lib(ring).Ring](x0: T0) { x0 * T0.0 = T0.0 }[D](a)"]}
+{"goal":"false","proof":[]}
+{"goal":"integral_domain_right_nonzero_of_mul_nonzero","proof":[]}
+{"goal":"integral_domain_square_nonzero","proof":[]}
 {"goal":"a.pow(k.suc) = a * a.pow(k)","proof":["function[T2: lib(monoid).Monoid](x0: Nat, x1: Nat, x2: T2) { x0.suc != x1 or x2 * x2.pow(x0) = x2.pow(x1) }[D](k, k.suc, a)"]}
 {"goal":"a * a.pow(k) != D.0","proof":[]}
 {"goal":"a.pow(k.suc) != D.0","proof":[]}

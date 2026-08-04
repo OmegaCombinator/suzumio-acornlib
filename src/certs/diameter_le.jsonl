@@ -48,3 +48,9 @@
 {"goal":"open_ball(c, r).subset(closed_ball(c, r))","proof":[]}
 {"goal":"diameter[M](open_ball(c, r)) <= r + r","proof":[]}
 {"goal":"open_ball_diameter_le","proof":[]}
+{"goal":"x.distance(y) <= diameter[M](s)","proof":[]}
+{"goal":"x.distance(y) <= b","proof":[]}
+{"goal":"distance_le_of_diameter_le","proof":[]}
+{"goal":"diameter[M](s) <= diameter[M](t)","proof":[]}
+{"goal":"diameter[M](s) <= b","proof":[]}
+{"goal":"diameter_le_of_subset_with_bound","proof":[]}

@@ -137,6 +137,9 @@ theorem mul_one_right(a: Nat) { a * 1 = a }
 
 theorem mul_one_left(a: Nat) { 1 * a = a }
 
+/// Multiplying a natural number by two gives its double.
+theorem mul_two_left(a: Nat) { Nat.2 * a = a + a }
+
 theorem mul_assoc(a: Nat, b: Nat, c: Nat) { a * b * c = a * (b * c) }
 
 theorem distrib_left(a: Nat, b: Nat, c: Nat) {
@@ -233,6 +236,10 @@ theorem lt_suc_right(a: Nat, b: Nat) { a < b.suc implies a = b or a < b }
 theorem lt_add_left(a: Nat, b: Nat, c: Nat) { b < c implies a + b < a + c }
 
 theorem lte_mul_both(a: Nat, b: Nat, c: Nat) { b <= c implies a * b <= a * c }
+
+theorem lt_mul_both(a: Nat, b: Nat, c: Nat) {
+    a != 0 and b < c implies a * b < a * c
+}
 
 theorem lte_add_left(a: Nat, b: Nat, c: Nat) {
     b <= c implies a + b <= a + c
@@ -362,6 +369,16 @@ define true_below(f: Nat -> Bool, n: Nat) -> Bool {
 /// A predicate true below `n` is true at each smaller number.
 theorem true_below_apply(f: Nat -> Bool, n: Nat, x: Nat) {
     true_below(f, n) and x < n implies f(x)
+}
+
+/// Every predicate is true below zero.
+theorem true_below_zero(f: Nat -> Bool) {
+    true_below(f, Nat.0)
+}
+
+/// If a predicate holds below `n` and at `n`, then it holds below `n.suc`.
+theorem true_below_suc_intro(f: Nat -> Bool, n: Nat) {
+    true_below(f, n) and f(n) implies true_below(f, n.suc)
 }
 
 theorem strong_induction(f: Nat -> Bool) {
@@ -550,6 +567,11 @@ theorem div_mod_decomp(a: Nat, m: Nat) {
     a.div(m) * m + a.mod(m) = a
 }
 
+/// A nonzero natural is positive.
+theorem pos_of_ne_zero(m: Nat) {
+    m != Nat.0 implies Nat.0 < m
+}
+
 theorem div_mul(q: Nat, m: Nat) {
     m != Nat.0 implies (q * m).div(m) = q
 }
@@ -623,6 +645,21 @@ theorem digit_sum_recurrence(p: Nat, n: Nat) {
 /// The base-`p` digit sum of zero is zero.
 theorem digit_sum_zero(p: Nat) {
     digit_sum(p, Nat.0) = Nat.0
+}
+
+/// Multiplication by the base appends a zero digit and preserves the digit sum.
+theorem digit_sum_mul_base(p: Nat, n: Nat) {
+    Nat.1 < p implies digit_sum(p, n * p) = digit_sum(p, n)
+}
+
+/// Multiplication by two preserves the binary digit sum.
+theorem digit_sum_two_mul(n: Nat) {
+    digit_sum(Nat.2, n * Nat.2) = digit_sum(Nat.2, n)
+}
+
+/// Doubling preserves the binary digit sum.
+theorem digit_sum_two_double(n: Nat) {
+    digit_sum(Nat.2, n + n) = digit_sum(Nat.2, n)
 }
 
 theorem mul_cancel_left(a: Nat, b: Nat, c: Nat) {

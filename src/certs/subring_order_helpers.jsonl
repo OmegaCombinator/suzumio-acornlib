@@ -28,3 +28,31 @@
 {"goal":"subring_subset[R](b, a)","proof":[]}
 {"goal":"(subring_subset[R](a, b) and subring_subset[R](b, a)) = (a = b)","proof":[]}
 {"goal":"subring_subset_antisymm_iff_eq","proof":[]}
+{"goal":"subring_subset[R](a.intersection(c), b)","proof":[]}
+{"goal":"subring_subset[R](a.intersection(c), c)","proof":[]}
+{"goal":"subring_subset[R](a.intersection(c), b.intersection(c))","proof":[]}
+{"goal":"subring_intersection_mono_left","proof":[]}
+{"goal":"subring_subset[R](c.intersection(a), c)","proof":[]}
+{"goal":"subring_subset[R](c.intersection(a), b)","proof":[]}
+{"goal":"subring_subset[R](c.intersection(a), c.intersection(b))","proof":[]}
+{"goal":"subring_intersection_mono_right","proof":[]}
+{"goal":"subring_subset[R](a.intersection(c), b.intersection(c))","proof":[]}
+{"goal":"subring_subset[R](b.intersection(c), b.intersection(d))","proof":[]}
+{"goal":"subring_subset[R](a.intersection(c), b.intersection(d))","proof":[]}
+{"goal":"subring_intersection_mono","proof":[]}
+{"goal":"subring_subset[R](a, subring_sup[R](b, c))","proof":[]}
+{"goal":"subring_subset[R](c, subring_sup[R](b, c))","proof":[]}
+{"goal":"subring_subset[R](subring_sup[R](a, c), subring_sup[R](b, c))","proof":[]}
+{"goal":"subring_sup_mono_left","proof":[]}
+{"goal":"subring_subset[R](c, subring_sup[R](c, b))","proof":[]}
+{"goal":"subring_subset[R](a, subring_sup[R](c, b))","proof":[]}
+{"goal":"subring_subset[R](subring_sup[R](c, a), subring_sup[R](c, b))","proof":[]}
+{"goal":"subring_sup_mono_right","proof":[]}
+{"goal":"subring_subset[R](a, subring_sup[R](b, d))","proof":[]}
+{"goal":"subring_subset[R](c, subring_sup[R](b, d))","proof":[]}
+{"goal":"subring_subset[R](subring_sup[R](a, c), subring_sup[R](b, d))","proof":[]}
+{"goal":"subring_sup_mono","proof":[]}
+{"goal":"subring_subset[R](subring_closure[R](a), subring_closure[R](b))","proof":[]}
+{"goal":"subring_subset[R](subring_closure[R](b), subring_closure[R](a))","proof":[]}
+{"goal":"subring_closure[R](a) = subring_closure[R](b)","proof":[]}
+{"goal":"subring_closure_eq_of_mutual_as_set_subset","proof":[]}

@@ -28,6 +28,11 @@
 {"goal":"Rat.from_nat(1) = Rat.1","proof":["function(x0: Nat) { lib(rat).rat_from_int(Int.from_nat(x0)) = Rat.from_nat(x0) }(1)"]}
 {"goal":"Rat.1 / Rat.1 = Rat.1","proof":["function(x0: Rat) { x0 * x0.inverse = Rat.1 or Rat.0 = x0 }(Rat.1)","function(x0: Rat, x1: Rat) { x0 * x1.inverse = x0 / x1 }(Rat.1, Rat.1)"]}
 {"goal":"unit_fraction_one","proof":["function(x0: Rat, x1: Rat) { x0 * x1.inverse = x0 / x1 }(Rat.1, Rat.1)","function[T0: lib(monoid).Monoid](x0: T0) { T0.1 * x0 = x0 }[Rat](unit_fraction(1))","function(x0: Nat) { Rat.from_nat(x0).inverse = unit_fraction(x0) }(1)"]}
+{"goal":"Rat.from_nat(0) = Rat.0","proof":["function(x0: Nat) { lib(rat).rat_from_int(lib(int).Int.from_nat(x0)) = Rat.from_nat(x0) }(0)"]}
+{"goal":"Rat.0.inverse = Rat.0","proof":[]}
+{"goal":"unit_fraction(0) = Rat.0.inverse","proof":["function(x0: Nat) { Rat.from_nat(x0).inverse = unit_fraction(x0) }(0)"]}
+{"goal":"unit_fraction(0) = Rat.0","proof":[]}
+{"goal":"unit_fraction_zero","proof":[]}
 {"goal":"Rat.from_nat(0) < Rat.from_nat(n)","proof":[]}
 {"goal":"Rat.from_nat(0) = Rat.0","proof":["function(x0: Nat) { lib(rat).rat_from_int(lib(int).Int.from_nat(x0)) = Rat.from_nat(x0) }(0)"]}
 {"goal":"Rat.0 < Rat.from_nat(n)","proof":[]}
@@ -38,7 +43,7 @@
 {"goal":"unit_fraction(n) * Rat.from_nat(n) = Rat.1","proof":[]}
 {"goal":"unit_fraction_mul_denominator","proof":[]}
 {"goal":"Rat.from_nat(0) < Rat.from_nat(n)","proof":[]}
-{"goal":"Rat.from_nat(0) = Rat.0","proof":["function(x0: Nat) { lib(rat).rat_from_int(lib(int).Int.from_nat(x0)) = Rat.from_nat(x0) }(0)"]}
+{"goal":"Rat.from_nat(0) = Rat.0","proof":["function(x0: Nat) { lib(rat).rat_from_int(Int.from_nat(x0)) = Rat.from_nat(x0) }(0)"]}
 {"goal":"Rat.0 < Rat.from_nat(n)","proof":[]}
 {"goal":"Rat.from_nat(n).is_positive","proof":[]}
 {"goal":"Rat.from_nat(n) != Rat.0","proof":[]}
@@ -69,6 +74,39 @@
 {"goal":"unit_fraction(m) = Rat.1 / Rat.from_nat(m)","proof":[]}
 {"goal":"unit_fraction(n) <= unit_fraction(m)","proof":[]}
 {"goal":"unit_fraction_lte_of_lte","proof":[]}
+{"goal":"0 < 1","proof":["function[T0: lib(add_monoid).AddMonoid](x0: T0) { x0 + T0.0 = x0 }[Nat](1)","function(x0: Nat) { x0 < x0.suc }(0)"]}
+{"goal":"1 <= n","proof":["function(x0: Nat, x1: Nat) { not x0 < x1 or not x1 < x0 }(1, n)","function(x0: Nat, x1: Nat) { x0 < x1 or x1 <= x0 }(n, 1)"]}
+{"goal":"0 < n","proof":[]}
+{"goal":"0 < n - 1","proof":["function(x0: Nat, x1: Nat) { not x0 > x1 or x0 - x1 > 0 }(n, 1)","function[T0: lib(order).PartialOrder](x0: T0, x1: T0) { x0 > x1 = x1 < x0 }[Nat](n, 1)","function[T0: lib(order).PartialOrder](x0: T0, x1: T0) { x0 > x1 = x1 < x0 }[Nat](n - 1, 0)"]}
+{"goal":"1 <= n - 1","proof":["function(x0: Nat, x1: Nat) { not x0 < x1 or x0.suc <= x1 }(0, n - 1)"]}
+{"goal":"n - 1 + 1 = n","proof":[]}
+{"goal":"n = n - 1 + 1","proof":[]}
+{"goal":"n - 1 + 1 <= n - 1 + (n - 1)","proof":["function(x0: Nat, x1: Nat, x2: Nat) { not x0 <= x1 or x2 + x0 <= x2 + x1 }(1, n - 1, n - 1)"]}
+{"goal":"2 * (n - 1) = n - 1 + (n - 1)","proof":[]}
+{"goal":"n <= 2 * (n - 1)","proof":[]}
+{"goal":"Rat.from_nat(0) < Rat.from_nat(n - 1)","proof":[]}
+{"goal":"Rat.from_nat(0) = Rat.0","proof":["function(x0: Nat) { lib(rat).rat_from_int(Int.from_nat(x0)) = Rat.from_nat(x0) }(0)"]}
+{"goal":"Rat.0 < Rat.from_nat(n - 1)","proof":[]}
+{"goal":"Rat.from_nat(n - 1).is_positive","proof":[]}
+{"goal":"Rat.from_nat(0) < Rat.from_nat(n)","proof":[]}
+{"goal":"Rat.0 < Rat.from_nat(n)","proof":[]}
+{"goal":"Rat.from_nat(n).is_positive","proof":[]}
+{"goal":"Rat.from_nat(n) <= Rat.from_nat(2 * (n - 1))","proof":[]}
+{"goal":"Rat.from_nat(2) * Rat.from_nat(n - 1) = Rat.from_nat(2 * (n - 1))","proof":[]}
+{"goal":"Rat.from_nat(2) = Rat.2","proof":["function(x0: Nat) { lib(rat).rat_from_int(Int.from_nat(x0)) = Rat.from_nat(x0) }(2)"]}
+{"goal":"Rat.2 * Rat.from_nat(n - 1) = Rat.from_nat(2 * (n - 1))","proof":[]}
+{"goal":"Rat.1 * Rat.from_nat(n) = Rat.from_nat(n)","proof":["function[T0: lib(monoid).Monoid](x0: T0) { T0.1 * x0 = x0 }[Rat](Rat.from_nat(n))"]}
+{"goal":"Rat.1 * Rat.from_nat(n) <= Rat.2 * Rat.from_nat(n - 1)","proof":[]}
+{"goal":"Rat.1 / Rat.from_nat(n - 1) <= Rat.2 / Rat.from_nat(n)","proof":[]}
+{"goal":"unit_fraction(n - 1) = Rat.1 / Rat.from_nat(n - 1)","proof":[]}
+{"goal":"unit_fraction(n) = Rat.1 / Rat.from_nat(n)","proof":[]}
+{"goal":"Rat.2 / Rat.from_nat(n) = Rat.2 * Rat.from_nat(n).inverse","proof":["function(x0: Rat, x1: Rat) { x0 * x1.inverse = x0 / x1 }(Rat.2, Rat.from_nat(n))"]}
+{"goal":"unit_fraction(n) = Rat.from_nat(n).inverse","proof":["function(x0: Rat, x1: Rat) { x0 * x1.inverse = x0 / x1 }(Rat.1, Rat.from_nat(n))","function[T0: lib(monoid).Monoid](x0: T0) { T0.1 * x0 = x0 }[Rat](Rat.from_nat(n).inverse)"]}
+{"goal":"Rat.2 / Rat.from_nat(n) = Rat.2 * unit_fraction(n)","proof":[]}
+{"goal":"Rat.2 * unit_fraction(n) = unit_fraction(n) + unit_fraction(n)","proof":[]}
+{"goal":"Rat.2 / Rat.from_nat(n) = unit_fraction(n) + unit_fraction(n)","proof":[]}
+{"goal":"unit_fraction(n - 1) <= unit_fraction(n) + unit_fraction(n)","proof":[]}
+{"goal":"unit_fraction_pred_lte_double","proof":[]}
 {"goal":"exists(k0: Int) { k0.is_positive and lib(rat).rat_from_int(k0).inverse < q }","proof":[]}
 {"goal":"exists(k0: Nat) { d = Int.from_nat(k0.suc) }","proof":[]}
 {"goal":"0 < k.suc","proof":["function(x0: Nat, x1: Nat) { x0 < x0 + x1.suc }(0, k)","function[T0: lib(add_monoid).AddMonoid](x0: T0) { T0.0 + x0 = x0 }[Nat](k.suc)"]}
@@ -107,6 +145,17 @@
 {"goal":"unit_fraction_bounded_step(q, n) = (0 < n and unit_fraction(n) <= q and (q - unit_fraction(n)).is_positive and q - unit_fraction(n) < q)","proof":["function(x0: Nat, x1: Rat) { (0 < x0 and unit_fraction(x0) <= x1 and (x1 - unit_fraction(x0)).is_positive and x1 - unit_fraction(x0) < x1) = unit_fraction_bounded_step(x1, x0) }(n, q)"]}
 {"goal":"0 < n","proof":[]}
 {"goal":"unit_fraction_bounded_step_denominator_positive","proof":[]}
+{"goal":"unit_fraction_bounded_step(q, n) = (0 < n and unit_fraction(n) <= q and (q - unit_fraction(n)).is_positive and q - unit_fraction(n) < q)","proof":["function(x0: Nat, x1: Rat) { (0 < x0 and unit_fraction(x0) <= x1 and (x1 - unit_fraction(x0)).is_positive and x1 - unit_fraction(x0) < x1) = unit_fraction_bounded_step(x1, x0) }(n, q)"]}
+{"goal":"unit_fraction(n) <= q","proof":[]}
+{"goal":"unit_fraction_bounded_step_lte","proof":[]}
+{"goal":"0 < n","proof":[]}
+{"goal":"unit_fraction(n) <= q","proof":[]}
+{"goal":"unit_fraction_bounded_denominator(q, n) = (0 < n and unit_fraction(n) <= q)","proof":["function(x0: Nat, x1: Rat) { (0 < x0 and unit_fraction(x0) <= x1) = unit_fraction_bounded_denominator(x1, x0) }(n, q)"]}
+{"goal":"unit_fraction_bounded_denominator(q, n)","proof":[]}
+{"goal":"unit_fraction_bounded_step_bounded_denominator","proof":[]}
+{"goal":"unit_fraction_bounded_step(q, n) = (0 < n and unit_fraction(n) <= q and (q - unit_fraction(n)).is_positive and q - unit_fraction(n) < q)","proof":["function(x0: Nat, x1: Rat) { (0 < x0 and unit_fraction(x0) <= x1 and (x1 - unit_fraction(x0)).is_positive and x1 - unit_fraction(x0) < x1) = unit_fraction_bounded_step(x1, x0) }(n, q)"]}
+{"goal":"(q - unit_fraction(n)).is_positive","proof":[]}
+{"goal":"unit_fraction_bounded_step_remainder_positive","proof":[]}
 {"goal":"q.denom.is_positive","proof":[]}
 {"goal":"Int.from_nat(n).is_positive","proof":[]}
 {"goal":"(q.denom * Int.from_nat(n)).is_positive","proof":[]}
@@ -150,22 +199,22 @@
 {"goal":"Int.0 <= unit_fraction_remainder_raw_num(q, n)","proof":[]}
 {"goal":"unit_fraction_bounded_denominator_raw_num_nonnegative","proof":[]}
 {"goal":"q.denom != Int.0","proof":[]}
-{"goal":"Int.from_nat(n).is_positive","proof":["not 0 < n"]}
+{"goal":"Int.from_nat(n).is_positive","proof":[]}
 {"goal":"false","proof":[]}
-{"goal":"Int.from_nat(n) != Int.0","proof":["false = true"]}
+{"goal":"Int.from_nat(n) != Int.0","proof":[]}
 {"goal":"reduce(q.num, q.denom) = q","proof":[]}
-{"goal":"unit_fraction(n) = reduce(Int.1, Int.from_nat(n))","proof":["not 0 < n"]}
+{"goal":"unit_fraction(n) = reduce(Int.1, Int.from_nat(n))","proof":[]}
 {"goal":"reduce(-Int.1, Int.from_nat(n)) = -reduce(Int.1, Int.from_nat(n))","proof":[]}
-{"goal":"-unit_fraction(n) = reduce(-Int.1, Int.from_nat(n))","proof":["reduce(Int.1, Int.from_nat(n)) = unit_fraction(n)","-reduce(Int.1, Int.from_nat(n)) != reduce(-Int.1, Int.from_nat(n))"]}
+{"goal":"-unit_fraction(n) = reduce(-Int.1, Int.from_nat(n))","proof":[]}
 {"goal":"q - unit_fraction(n) = q + -unit_fraction(n)","proof":["function[T0: lib(add_group).AddGroup](x0: T0, x1: T0) { x0 + -x1 = x0 - x1 }[Rat](q, unit_fraction(n))"]}
 {"goal":"q + -unit_fraction(n) = reduce(q.num, q.denom) + reduce(-Int.1, Int.from_nat(n))","proof":[]}
-{"goal":"reduce(q.num, q.denom) + reduce(-Int.1, Int.from_nat(n)) = reduce(q.num * Int.from_nat(n) + q.denom * -Int.1, q.denom * Int.from_nat(n))","proof":["q.denom = Int.0 or Int.from_nat(n) = Int.0","q.denom = Int.0"]}
+{"goal":"reduce(q.num, q.denom) + reduce(-Int.1, Int.from_nat(n)) = reduce(q.num * Int.from_nat(n) + q.denom * -Int.1, q.denom * Int.from_nat(n))","proof":[]}
 {"goal":"q.denom * -Int.1 = -q.denom","proof":["function(x0: Int, x1: Int) { x0 * -x1 = -(x0 * x1) }(q.denom, Int.1)","function[T0: lib(monoid).Monoid](x0: T0) { x0 * T0.1 = x0 }[Int](q.denom)"]}
-{"goal":"q.num * Int.from_nat(n) + q.denom * -Int.1 = q.num * Int.from_nat(n) - q.denom","proof":["function[T0: lib(add_group).AddGroup](x0: T0, x1: T0) { x0 + -x1 = x0 - x1 }[Int](q.num * Int.from_nat(n), q.denom)","function(x0: Int, x1: Int) { x0 + x1 = x0 + x1 }(q.num * Int.from_nat(n), q.denom * -Int.1)","function(x0: Int) { -x0 = -x0 }(q.denom)"]}
+{"goal":"q.num * Int.from_nat(n) + q.denom * -Int.1 = q.num * Int.from_nat(n) - q.denom","proof":["function[T0: lib(add_group).AddGroup](x0: T0, x1: T0) { x0 + -x1 = x0 - x1 }[Int](q.num * Int.from_nat(n), q.denom)"]}
 {"goal":"unit_fraction_remainder_raw_num(q, n) = q.num * Int.from_nat(n) - q.denom","proof":["function(x0: Rat, x1: Nat) { x0.num * Int.from_nat(x1) - x0.denom = unit_fraction_remainder_raw_num(x0, x1) }(q, n)"]}
 {"goal":"unit_fraction_remainder_raw_denom(q, n) = q.denom * Int.from_nat(n)","proof":["function(x0: Rat, x1: Nat) { x0.denom * Int.from_nat(x1) = unit_fraction_remainder_raw_denom(x0, x1) }(q, n)"]}
-{"goal":"q - unit_fraction(n) = reduce(unit_fraction_remainder_raw_num(q, n), unit_fraction_remainder_raw_denom(q, n))","proof":["reduce(q.num * Int.from_nat(n) + q.denom * -Int.1, q.denom * Int.from_nat(n)) = reduce(q.num, q.denom) + reduce(-Int.1, Int.from_nat(n))"]}
-{"goal":"unit_fraction_remainder_eq_raw","proof":["not 0 < n"]}
+{"goal":"q - unit_fraction(n) = reduce(unit_fraction_remainder_raw_num(q, n), unit_fraction_remainder_raw_denom(q, n))","proof":[]}
+{"goal":"unit_fraction_remainder_eq_raw","proof":[]}
 {"goal":"exists(k0: Int) { k0.is_positive and lib(rat).rat_from_int(k0).inverse < q }","proof":[]}
 {"goal":"exists(k0: Nat) { d = Int.from_nat(k0.suc) }","proof":[]}
 {"goal":"0 < k.suc","proof":["function(x0: Nat, x1: Nat) { x0 < x0 + x1.suc }(0, k)","function[T0: lib(add_monoid).AddMonoid](x0: T0) { T0.0 + x0 = x0 }[Nat](k.suc)"]}
@@ -239,7 +288,7 @@
 {"goal":"unit_fraction(n) < Rat.1","proof":[]}
 {"goal":"n = 1","proof":[]}
 {"goal":"unit_fraction(n) = Rat.1","proof":[]}
-{"goal":"false","proof":["function[T0: lib(order).PartialOrder](x0: T0, x1: T0) { x0 > x1 = x1 < x0 }[Rat](Rat.1, unit_fraction(n))","function[T0: lib(order).PartialOrder](x0: T0, x1: T0) { not x0 > x1 or x0 != x1 }[Rat](Rat.1, unit_fraction(n))","Rat.1 > unit_fraction(n)","not Rat.1 > unit_fraction(n)"]}
+{"goal":"false","proof":["function[T0: lib(order).PartialOrder](x0: T0, x1: T0) { x0 > x1 = x1 < x0 }[Rat](Rat.1, unit_fraction(n))","function[T0: lib(order).PartialOrder](x0: T0, x1: T0) { not x0 > x1 or x0 != x1 }[Rat](Rat.1, unit_fraction(n))"]}
 {"goal":"1 < n","proof":[]}
 {"goal":"unit_fraction_ceiling_step_gt_one_of_lt_one","proof":[]}
 {"goal":"1 < n","proof":[]}
@@ -284,6 +333,112 @@
 {"goal":"unit_fraction_remainder_raw_num(q, n) = q.num * Int.from_nat(n) - q.denom","proof":["function(x0: Rat, x1: Nat) { x0.num * Int.from_nat(x1) - x0.denom = unit_fraction_remainder_raw_num(x0, x1) }(q, n)"]}
 {"goal":"unit_fraction_remainder_raw_num(q, n) < q.num","proof":[]}
 {"goal":"unit_fraction_ceiling_step_raw_num_lt_num","proof":[]}
+{"goal":"0 < n","proof":[]}
+{"goal":"q - unit_fraction(n) = reduce(raw_num, raw_denom)","proof":[]}
+{"goal":"reduce(raw_num, raw_denom).is_positive","proof":[]}
+{"goal":"raw_denom.is_positive","proof":[]}
+{"goal":"reduce(raw_num, raw_denom).num <= raw_num","proof":[]}
+{"goal":"(q - unit_fraction(n)).num = reduce(raw_num, raw_denom).num","proof":[]}
+{"goal":"(q - unit_fraction(n)).num <= raw_num","proof":[]}
+{"goal":"raw_num < q.num","proof":[]}
+{"goal":"(q - unit_fraction(n)).num < q.num","proof":[]}
+{"goal":"unit_fraction_ceiling_step_positive_remainder_num_lt_num","proof":[]}
+{"goal":"unit_fraction(n) <= q","proof":[]}
+{"goal":"q = unit_fraction(n)","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"unit_fraction(n) != q","proof":[]}
+{"goal":"unit_fraction(n) <= q = ((q - unit_fraction(n)).is_positive or unit_fraction(n) = q)","proof":["function(x0: Rat, x1: Rat) { ((x0 - x1).is_positive or x0 = x1) = x1 <= x0 }(q, unit_fraction(n))"]}
+{"goal":"(q - unit_fraction(n)).is_positive or unit_fraction(n) = q","proof":[]}
+{"goal":"(q - unit_fraction(n)).is_positive","proof":[]}
+{"goal":"(q - unit_fraction(n)).num < q.num","proof":[]}
+{"goal":"unit_fraction_ceiling_step_remainder_num_lt_num","proof":[]}
+{"goal":"unit_fraction(n) <= q","proof":[]}
+{"goal":"q = unit_fraction(n)","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"unit_fraction(n) != q","proof":[]}
+{"goal":"unit_fraction(n) <= q = ((q - unit_fraction(n)).is_positive or unit_fraction(n) = q)","proof":["function(x0: Rat, x1: Rat) { ((x0 - x1).is_positive or x0 = x1) = x1 <= x0 }(q, unit_fraction(n))"]}
+{"goal":"(q - unit_fraction(n)).is_positive or unit_fraction(n) = q","proof":[]}
+{"goal":"(q - unit_fraction(n)).is_positive","proof":[]}
+{"goal":"unit_fraction_ceiling_step_remainder_positive","proof":[]}
+{"goal":"0 < n","proof":[]}
+{"goal":"unit_fraction(n).is_positive","proof":[]}
+{"goal":"q > q - unit_fraction(n)","proof":[]}
+{"goal":"q - unit_fraction(n) < q","proof":["function[T0: lib(order).PartialOrder](x0: T0, x1: T0) { (not x0 <= x1 and x1 <= x0) = x0 > x1 }[Rat](q, q - unit_fraction(n))","function[T0: lib(order).PartialOrder](x0: T0, x1: T0) { (not x0 <= x1 and x1 <= x0) = x1 < x0 }[Rat](q, q - unit_fraction(n))"]}
+{"goal":"unit_fraction_ceiling_step_remainder_lt_self","proof":[]}
+{"goal":"q - unit_fraction(n) < q","proof":[]}
+{"goal":"q - unit_fraction(n) < Rat.1","proof":[]}
+{"goal":"unit_fraction_ceiling_step_remainder_lt_one","proof":[]}
+{"goal":"1 < n","proof":[]}
+{"goal":"q < unit_fraction(n - 1)","proof":[]}
+{"goal":"unit_fraction(n - 1) <= unit_fraction(n) + unit_fraction(n)","proof":[]}
+{"goal":"q < unit_fraction(n) + unit_fraction(n)","proof":[]}
+{"goal":"q - unit_fraction(n) + unit_fraction(n) = q","proof":["function(x0: Rat, x1: Rat) { x0 - x1 + x1 = x0 }(q, unit_fraction(n))"]}
+{"goal":"q - unit_fraction(n) + unit_fraction(n) < unit_fraction(n) + unit_fraction(n)","proof":[]}
+{"goal":"q - unit_fraction(n) < unit_fraction(n)","proof":[]}
+{"goal":"unit_fraction_ceiling_step_remainder_lt_unit","proof":[]}
+{"goal":"q < Rat.1 and unit_fraction_ceiling_step(q, n)","proof":[]}
+{"goal":"q - unit_fraction(n) < unit_fraction(n)","proof":[]}
+{"goal":"0 < m","proof":[]}
+{"goal":"unit_fraction(m) <= q - unit_fraction(n)","proof":[]}
+{"goal":"unit_fraction(n) <= unit_fraction(m)","proof":[]}
+{"goal":"unit_fraction(n) <= q - unit_fraction(n)","proof":[]}
+{"goal":"unit_fraction(n) < unit_fraction(n)","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"not m <= n","proof":[]}
+{"goal":"n < m","proof":[]}
+{"goal":"unit_fraction_ceiling_step_next_denominator_gt","proof":[]}
+{"goal":"n < m","proof":[]}
+{"goal":"n.suc <= m","proof":[]}
+{"goal":"unit_fraction_ceiling_step_next_denominator_lower_bound","proof":[]}
+{"goal":"q - unit_fraction(n) = reduce(unit_fraction_remainder_raw_num(q, n), unit_fraction_remainder_raw_denom(q, n))","proof":[]}
+{"goal":"q - unit_fraction(n) = reduce(Int.0, unit_fraction_remainder_raw_denom(q, n))","proof":[]}
+{"goal":"reduce(Int.0, unit_fraction_remainder_raw_denom(q, n)) = Rat.0","proof":[]}
+{"goal":"q - unit_fraction(n) = Rat.0","proof":[]}
+{"goal":"unit_fraction_remainder_zero_of_raw_num_zero","proof":[]}
+{"goal":"0 < n","proof":[]}
+{"goal":"unit_fraction_bounded_denominator(q, n)","proof":[]}
+{"goal":"Int.0 <= unit_fraction_remainder_raw_num(q, n)","proof":[]}
+{"goal":"(q - unit_fraction(n)).is_positive","proof":[]}
+{"goal":"q - unit_fraction(n) = Rat.0","proof":[]}
+{"goal":"Rat.0.is_positive","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"unit_fraction_remainder_raw_num(q, n) != Int.0","proof":[]}
+{"goal":"unit_fraction_remainder_raw_num(q, n).is_positive or unit_fraction_remainder_raw_num(q, n).is_negative","proof":[]}
+{"goal":"Int.0 <= unit_fraction_remainder_raw_num(q, n)","proof":[]}
+{"goal":"unit_fraction_remainder_raw_num(q, n) < Int.0","proof":[]}
+{"goal":"Int.0 < Int.0","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"unit_fraction_remainder_raw_num(q, n).is_positive","proof":[]}
+{"goal":"unit_fraction_bounded_step_raw_num_positive","proof":[]}
+{"goal":"a.abs = a","proof":[]}
+{"goal":"Int.from_nat(abs(a)) = a","proof":["function(x0: Int) { Int.from_nat(abs(x0)) = x0.abs }(a)"]}
+{"goal":"b.abs = b","proof":[]}
+{"goal":"Int.from_nat(abs(b)) = b","proof":["function(x0: Int) { Int.from_nat(abs(x0)) = x0.abs }(b)"]}
+{"goal":"Int.from_nat(abs(a)) < Int.from_nat(abs(b))","proof":[]}
+{"goal":"Int.from_nat(abs(a)) <= Int.from_nat(abs(b))","proof":["function[T0: lib(order).PartialOrder](x0: T0, x1: T0) { not x0 < x1 or x0 <= x1 }[Int](Int.from_nat(abs(a)), Int.from_nat(abs(b)))"]}
+{"goal":"abs(a) <= abs(b)","proof":[]}
+{"goal":"Int.from_nat(abs(a)) = Int.from_nat(abs(b))","proof":[]}
+{"goal":"a = b","proof":[]}
+{"goal":"false","proof":["function[T0: lib(order).PartialOrder](x0: T0, x1: T0) { x0 > x1 = x1 < x0 }[Int](b, a)","function[T0: lib(order).PartialOrder](x0: T0, x1: T0) { not x0 > x1 or x0 != x1 }[Int](b, a)"]}
+{"goal":"abs(a) != abs(b)","proof":[]}
+{"goal":"abs(a) < abs(b)","proof":["function[T0: lib(order).LinearOrder](x0: T0, x1: T0) { x0 < x1 or x1 < x0 or x0 = x1 }[Nat](abs(a), abs(b))","function(x0: Nat, x1: Nat) { not x0 < x1 or not x1 <= x0 }(abs(b), abs(a))"]}
+{"goal":"positive_int_lt_imp_abs_lt","proof":[]}
+{"goal":"unit_fraction_remainder_raw_num(q, n).is_positive","proof":[]}
+{"goal":"unit_fraction_remainder_raw_num(q, n) < q.num","proof":[]}
+{"goal":"unit_fraction_raw_num_descends(q, n) = (unit_fraction_remainder_raw_num(q, n).is_positive and unit_fraction_remainder_raw_num(q, n) < q.num)","proof":["function(x0: Rat, x1: Nat) { (unit_fraction_remainder_raw_num(x0, x1).is_positive and unit_fraction_remainder_raw_num(x0, x1) < x0.num) = unit_fraction_raw_num_descends(x0, x1) }(q, n)"]}
+{"goal":"unit_fraction_raw_num_descends(q, n)","proof":[]}
+{"goal":"unit_fraction_ceiling_step_raw_num_descends","proof":[]}
+{"goal":"unit_fraction_raw_num_descends(q, n)","proof":[]}
+{"goal":"unit_fraction_raw_num_descends(q, n) = (unit_fraction_remainder_raw_num(q, n).is_positive and unit_fraction_remainder_raw_num(q, n) < q.num)","proof":["function(x0: Rat, x1: Nat) { (unit_fraction_remainder_raw_num(x0, x1).is_positive and unit_fraction_remainder_raw_num(x0, x1) < x0.num) = unit_fraction_raw_num_descends(x0, x1) }(q, n)"]}
+{"goal":"unit_fraction_remainder_raw_num(q, n).is_positive","proof":[]}
+{"goal":"unit_fraction_remainder_raw_num(q, n) < q.num","proof":[]}
+{"goal":"q.is_positive = q.num.is_positive","proof":["function(x0: Rat) { x0.num.is_positive = x0.is_positive }(q)"]}
+{"goal":"q.num.is_positive","proof":[]}
+{"goal":"abs(unit_fraction_remainder_raw_num(q, n)) < abs(q.num)","proof":[]}
+{"goal":"unit_fraction_remainder_raw_num_measure(q, n) = abs(unit_fraction_remainder_raw_num(q, n))","proof":["function(x0: Rat, x1: Nat) { abs(unit_fraction_remainder_raw_num(x0, x1)) = unit_fraction_remainder_raw_num_measure(x0, x1) }(q, n)"]}
+{"goal":"unit_fraction_num_measure(q) = abs(q.num)","proof":["function(x0: Rat) { abs(x0.num) = unit_fraction_num_measure(x0) }(q)"]}
+{"goal":"unit_fraction_remainder_raw_num_measure(q, n) < unit_fraction_num_measure(q)","proof":[]}
+{"goal":"unit_fraction_ceiling_step_raw_num_measure_lt","proof":[]}
 {"goal":"map[Nat, Rat](List.nil[Nat], unit_fraction) = List.nil[Rat]","proof":["function[T0, T1](x0: List[T0], x1: T0 -> T1) { List.nil[T0] != x0 or map[T0, T1](x0, x1) = List.nil[T1] }[Nat, Rat](List.nil[Nat], unit_fraction)"]}
 {"goal":"sum[Rat](List.nil[Rat]) = Rat.0","proof":["function[T0: lib(add_comm_monoid).AddCommMonoid](x0: List[T0]) { List.nil[T0] != x0 or T0.0 = sum[T0](x0) }[Rat](List.nil[Rat])"]}
 {"goal":"unit_fraction_sum_nil","proof":["function(x0: List[Nat]) { sum[Rat](map[Nat, Rat](x0, unit_fraction)) = unit_fraction_sum(x0) }(List.nil[Nat])"]}
@@ -340,6 +495,15 @@
 {"goal":"is_lower_bound(List.cons(n, denominators), bound) = (bound <= n and is_lower_bound(denominators, bound))","proof":[]}
 {"goal":"denominator_list_lower_bound(bound, denominators)","proof":["function(x0: List[Nat], x1: Nat) { is_lower_bound(x0, x1) = denominator_list_lower_bound(x1, x0) }(List.cons(n, denominators), bound)","function(x0: List[Nat], x1: Nat) { is_lower_bound(x0, x1) = denominator_list_lower_bound(x1, x0) }(denominators, bound)"]}
 {"goal":"denominator_list_lower_bound_tail","proof":[]}
+{"goal":"is_lower_bound(denominators, smaller)","proof":["function(x0: List[Nat], x1: Nat) { is_lower_bound(x0, x1) = denominator_list_lower_bound(x1, x0) }(denominators, bound)"]}
+{"goal":"denominator_list_lower_bound(smaller, denominators)","proof":["function(x0: List[Nat], x1: Nat) { is_lower_bound(x0, x1) = denominator_list_lower_bound(x1, x0) }(denominators, smaller)"]}
+{"goal":"denominator_list_lower_bound_monotone","proof":[]}
+{"goal":"n <= n.suc","proof":["function(x0: Nat, x1: Nat) { not x0 < x1 or not x1 < x0 }(n, n.suc)","function(x0: Nat, x1: Nat) { x0 < x1 or x1 <= x0 }(n.suc, n)"]}
+{"goal":"denominator_list_lower_bound(n, denominators)","proof":["function(x0: List[Nat], x1: Nat) { is_lower_bound(x0, x1) = denominator_list_lower_bound(x1, x0) }(denominators, n.suc)","function(x0: List[Nat], x1: Nat) { is_lower_bound(x0, x1) = denominator_list_lower_bound(x1, x0) }(denominators, n)"]}
+{"goal":"denominator_list_lower_bound_suc_imp_lower_bound","proof":[]}
+{"goal":"denominator_list_lower_bound(n, denominators)","proof":[]}
+{"goal":"denominator_list_lower_bound(n, List.cons(n, denominators))","proof":["function[T0: lib(lattice).Lattice](x0: T0, x1: T0) { x0.meet(x1).join(x0) = x0 }[Nat](n, Nat.zero)","function(x0: Nat, x1: Nat) { x0 <= x1.join(x0) }(n, n.meet(Nat.zero))"]}
+{"goal":"denominator_list_lower_bound_cons_self_of_suc","proof":[]}
 {"goal":"positive_denominator_list_lower_bound_one_pred(List.nil[Nat]) = (positive_denominator_list(List.nil[Nat]) implies denominator_list_lower_bound(1, List.nil[Nat]))","proof":["function(x0: List[Nat]) { (not positive_denominator_list(x0) or denominator_list_lower_bound(1, x0)) = positive_denominator_list_lower_bound_one_pred(x0) }(List.nil[Nat])"]}
 {"goal":"positive_denominator_list_lower_bound_one_pred(List.nil[Nat])","proof":[]}
 {"goal":"0 < head","proof":[]}
@@ -359,6 +523,11 @@
 {"goal":"1 <= n","proof":["function(x0: List[Nat], x1: Nat) { is_lower_bound(x0, x1) = denominator_list_lower_bound(x1, x0) }(denominators, 1)"]}
 {"goal":"0 < n","proof":["function(x0: Nat, x1: Nat) { not x0 <= x1 or 0 < lib(combinatorics).binom(x1, x0) }(1, n)","function(x0: Nat) { lib(combinatorics).binom(x0, 1) = x0 }(n)"]}
 {"goal":"positive_denominator_list_contains_positive","proof":[]}
+{"goal":"n.suc <= n","proof":["function(x0: List[Nat], x1: Nat) { is_lower_bound(x0, x1) = denominator_list_lower_bound(x1, x0) }(denominators, n.suc)"]}
+{"goal":"not n < n.suc","proof":[]}
+{"goal":"n < n.suc","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"denominator_list_lower_bound_suc_not_contains","proof":[]}
 {"goal":"is_upper_bound(List.cons(n, denominators), bound) = (n <= bound and is_upper_bound(denominators, bound))","proof":[]}
 {"goal":"n <= bound","proof":["function(x0: List[Nat], x1: Nat) { is_upper_bound(x0, x1) = denominator_list_upper_bound(x1, x0) }(List.cons(n, denominators), bound)"]}
 {"goal":"denominator_list_upper_bound_head","proof":[]}
@@ -444,9 +613,21 @@
 {"goal":"positive_denominator_list_singleton","proof":["function[T0](x0: T0) { List.cons[T0](x0, List.nil[T0]) = List.singleton[T0](x0) }[Nat](n)"]}
 {"goal":"List.nil[Nat].is_unique","proof":["function[T0](x0: List[T0]) { x0.unique = x0 = x0.is_unique }[Nat](List.nil[Nat])","function[T0](x0: List[T0]) { List.nil[T0] != x0 or x0.unique = List.nil[T0] }[Nat](List.nil[Nat])"]}
 {"goal":"egyptian_denominator_list_nil","proof":["function(x0: List[Nat]) { (x0.is_unique and positive_denominator_list(x0)) = egyptian_denominator_list(x0) }(List.nil[Nat])"]}
+{"goal":"egyptian_denominator_list(denominators) = (denominators.is_unique and positive_denominator_list(denominators))","proof":["function(x0: List[Nat]) { (x0.is_unique and positive_denominator_list(x0)) = egyptian_denominator_list(x0) }(denominators)"]}
+{"goal":"denominators.is_unique","proof":[]}
+{"goal":"egyptian_denominator_list_unique","proof":[]}
+{"goal":"egyptian_denominator_list(denominators) = (denominators.is_unique and positive_denominator_list(denominators))","proof":["function(x0: List[Nat]) { (x0.is_unique and positive_denominator_list(x0)) = egyptian_denominator_list(x0) }(denominators)"]}
+{"goal":"positive_denominator_list(denominators)","proof":[]}
+{"goal":"egyptian_denominator_list_positive","proof":[]}
 {"goal":"List.singleton(n).is_unique","proof":[]}
 {"goal":"positive_denominator_list(List.singleton(n))","proof":[]}
 {"goal":"egyptian_denominator_list_singleton","proof":["function(x0: List[Nat]) { (x0.is_unique and positive_denominator_list(x0)) = egyptian_denominator_list(x0) }(List.singleton(n))","function[T0](x0: T0) { List.singleton[T0](x0).is_unique }[Nat](n)"]}
+{"goal":"egyptian_denominator_list(denominators) = (denominators.is_unique and positive_denominator_list(denominators))","proof":["function(x0: List[Nat]) { (x0.is_unique and positive_denominator_list(x0)) = egyptian_denominator_list(x0) }(denominators)"]}
+{"goal":"denominators.is_unique","proof":[]}
+{"goal":"egyptian_denominator_list_unique_part","proof":[]}
+{"goal":"egyptian_denominator_list(denominators) = (denominators.is_unique and positive_denominator_list(denominators))","proof":["function(x0: List[Nat]) { (x0.is_unique and positive_denominator_list(x0)) = egyptian_denominator_list(x0) }(denominators)"]}
+{"goal":"positive_denominator_list(denominators)","proof":[]}
+{"goal":"egyptian_denominator_list_positive_part","proof":[]}
 {"goal":"egyptian_denominator_list(denominators) = (denominators.is_unique and positive_denominator_list(denominators))","proof":["function(x0: List[Nat]) { (x0.is_unique and positive_denominator_list(x0)) = egyptian_denominator_list(x0) }(denominators)"]}
 {"goal":"denominators.is_unique","proof":[]}
 {"goal":"positive_denominator_list(denominators)","proof":[]}
@@ -469,6 +650,20 @@
 {"goal":"Rat.0 = unit_fraction_sum(List.nil[Nat])","proof":[]}
 {"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and Rat.0 = unit_fraction_sum(k0) }","proof":["function(x0: List[Nat]) { not (egyptian_denominator_list(x0) and unit_fraction_sum(x0) = Rat.0) }(List.nil[Nat])"]}
 {"goal":"is_egyptian_fraction_zero","proof":["let w0: List[Nat] satisfy { egyptian_denominator_list(w0) and unit_fraction_sum(w0) = Rat.0 }","function(x0: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and unit_fraction_sum(k0) = x0 } = is_egyptian_fraction(x0) }(Rat.0)"]}
+{"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(bound, k0) and q = unit_fraction_sum(k0) }","proof":["function(x0: Nat, x1: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(x0, k0) and unit_fraction_sum(k0) = x1 } = is_egyptian_fraction_with_lower_bound(x1, x0) }(bound, q)"]}
+{"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and q = unit_fraction_sum(k0) }","proof":["function(x0: List[Nat]) { not (egyptian_denominator_list(x0) and unit_fraction_sum(x0) = q) }(denominators)"]}
+{"goal":"is_egyptian_fraction_with_lower_bound_imp_egyptian","proof":["function(x0: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and unit_fraction_sum(k0) = x0 } = is_egyptian_fraction(x0) }(q)"]}
+{"goal":"Rat.0 = unit_fraction_sum(List.nil[Nat])","proof":[]}
+{"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(bound, k0) and Rat.0 = unit_fraction_sum(k0) }","proof":["function(x0: Nat) { denominator_list_lower_bound(x0, List.nil[Nat]) }(bound)","function(x0: List[Nat]) { not (egyptian_denominator_list(x0) and denominator_list_lower_bound(bound, x0) and unit_fraction_sum(x0) = Rat.0) }(List.nil[Nat])"]}
+{"goal":"is_egyptian_fraction_with_lower_bound_zero","proof":["let w0: List[Nat] satisfy { egyptian_denominator_list(w0) and denominator_list_lower_bound(bound, w0) and unit_fraction_sum(w0) = Rat.0 }","function(x0: Nat, x1: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(x0, k0) and unit_fraction_sum(k0) = x1 } = is_egyptian_fraction_with_lower_bound(x1, x0) }(bound, Rat.0)"]}
+{"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and unit_fraction_sum(denominators) = unit_fraction_sum(k0) }","proof":[]}
+{"goal":"unit_fraction_sum_is_egyptian","proof":["function(x0: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and unit_fraction_sum(k0) = x0 } = is_egyptian_fraction(x0) }(unit_fraction_sum(denominators))"]}
+{"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(bound, k0) and unit_fraction_sum(denominators) = unit_fraction_sum(k0) }","proof":[]}
+{"goal":"unit_fraction_sum_is_egyptian_with_lower_bound","proof":["function(x0: Nat, x1: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(x0, k0) and unit_fraction_sum(k0) = x1 } = is_egyptian_fraction_with_lower_bound(x1, x0) }(bound, unit_fraction_sum(denominators))"]}
+{"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(bound, k0) and q = unit_fraction_sum(k0) }","proof":["function(x0: Nat, x1: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(x0, k0) and unit_fraction_sum(k0) = x1 } = is_egyptian_fraction_with_lower_bound(x1, x0) }(bound, q)"]}
+{"goal":"denominator_list_lower_bound(smaller, denominators)","proof":[]}
+{"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(smaller, k0) and q = unit_fraction_sum(k0) }","proof":["function(x0: List[Nat]) { not (egyptian_denominator_list(x0) and denominator_list_lower_bound(smaller, x0) and unit_fraction_sum(x0) = q) }(denominators)"]}
+{"goal":"is_egyptian_fraction_with_lower_bound_monotone","proof":["function(x0: Nat, x1: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(x0, k0) and unit_fraction_sum(k0) = x1 } = is_egyptian_fraction_with_lower_bound(x1, x0) }(smaller, q)"]}
 {"goal":"egyptian_fraction_add_disjoint_hyp(q, r, left, right) = (egyptian_denominator_list(left) and egyptian_denominator_list(right) and forall(x0: Nat) { not (left.contains(x0) and right.contains(x0)) } and q = unit_fraction_sum(left) and r = unit_fraction_sum(right))","proof":["function(x0: List[Nat], x1: List[Nat], x2: Rat, x3: Rat) { (egyptian_denominator_list(x0) and egyptian_denominator_list(x1) and forall(x4: Nat) { not x4 ∈ x0 or not x4 ∈ x1 } and unit_fraction_sum(x0) = x2 and unit_fraction_sum(x1) = x3) = egyptian_fraction_add_disjoint_hyp(x2, x3, x0, x1) }(left, right, q, r)"]}
 {"goal":"egyptian_denominator_list(left) and egyptian_denominator_list(right) and forall(x0: Nat) { not (left.contains(x0) and right.contains(x0)) }","proof":[]}
 {"goal":"egyptian_denominator_list(left + right)","proof":[]}
@@ -477,16 +672,188 @@
 {"goal":"q + r = unit_fraction_sum(left + right)","proof":[]}
 {"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and q + r = unit_fraction_sum(k0) }","proof":["function(x0: List[Nat]) { not (egyptian_denominator_list(x0) and unit_fraction_sum(x0) = q + r) }(left + right)"]}
 {"goal":"egyptian_fraction_add_disjoint","proof":["function(x0: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and unit_fraction_sum(k0) = x0 } = is_egyptian_fraction(x0) }(q + r)"]}
+{"goal":"egyptian_denominator_list(left + right)","proof":[]}
+{"goal":"denominator_list_lower_bound(bound, left + right)","proof":[]}
+{"goal":"unit_fraction_sum(left + right) = unit_fraction_sum(left) + unit_fraction_sum(right)","proof":[]}
+{"goal":"q + r = unit_fraction_sum(left) + r","proof":[]}
+{"goal":"q + r = unit_fraction_sum(left) + unit_fraction_sum(right)","proof":[]}
+{"goal":"q + r = unit_fraction_sum(left + right)","proof":[]}
+{"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(bound, k0) and q + r = unit_fraction_sum(k0) }","proof":["function(x0: List[Nat]) { not (egyptian_denominator_list(x0) and denominator_list_lower_bound(bound, x0) and unit_fraction_sum(x0) = q + r) }(left + right)"]}
+{"goal":"egyptian_fraction_add_disjoint_lower_bound","proof":["function(x0: Nat, x1: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(x0, k0) and unit_fraction_sum(k0) = x1 } = is_egyptian_fraction_with_lower_bound(x1, x0) }(bound, q + r)"]}
 {"goal":"egyptian_denominator_list(List.cons(n, denominators))","proof":[]}
 {"goal":"unit_fraction_sum(List.cons(n, denominators)) = unit_fraction(n) + unit_fraction_sum(denominators)","proof":[]}
 {"goal":"unit_fraction(n) + q = unit_fraction(n) + unit_fraction_sum(denominators)","proof":[]}
 {"goal":"unit_fraction(n) + q = unit_fraction_sum(List.cons(n, denominators))","proof":[]}
 {"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and unit_fraction(n) + q = unit_fraction_sum(k0) }","proof":["function(x0: List[Nat]) { not (egyptian_denominator_list(x0) and unit_fraction_sum(x0) = unit_fraction(n) + q) }(List.cons(n, denominators))"]}
 {"goal":"egyptian_fraction_add_fresh_unit","proof":["function(x0: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and unit_fraction_sum(k0) = x0 } = is_egyptian_fraction(x0) }(unit_fraction(n) + q)"]}
+{"goal":"not denominators.contains(n)","proof":[]}
+{"goal":"is_egyptian_fraction(unit_fraction(n) + q)","proof":[]}
+{"goal":"egyptian_fraction_add_lower_bound_unit","proof":[]}
 {"goal":"is_egyptian_fraction(unit_fraction(n) + (q - unit_fraction(n)))","proof":[]}
 {"goal":"unit_fraction(n) + (q - unit_fraction(n)) = q","proof":["function(x0: Rat, x1: Rat) { x0 - x1 + x1 = x0 }(q, unit_fraction(n))","function(x0: Rat, x1: Rat) { x0 + x1 = x1 + x0 }(unit_fraction(n), q - unit_fraction(n))"]}
 {"goal":"is_egyptian_fraction(q)","proof":[]}
 {"goal":"egyptian_fraction_of_bounded_step_remainder","proof":[]}
+{"goal":"not denominators.contains(n)","proof":[]}
+{"goal":"remainder = unit_fraction_sum(denominators)","proof":[]}
+{"goal":"denominators.is_unique","proof":[]}
+{"goal":"positive_denominator_list(denominators)","proof":[]}
+{"goal":"List.cons(n, denominators).is_unique","proof":[]}
+{"goal":"positive_denominator_list(List.cons(n, denominators))","proof":[]}
+{"goal":"egyptian_denominator_list(List.cons(n, denominators)) = (List.cons(n, denominators).is_unique and positive_denominator_list(List.cons(n, denominators)))","proof":["function(x0: List[Nat]) { (x0.is_unique and positive_denominator_list(x0)) = egyptian_denominator_list(x0) }(List.cons(n, denominators))"]}
+{"goal":"egyptian_denominator_list(List.cons(n, denominators))","proof":[]}
+{"goal":"unit_fraction_sum(List.cons(n, denominators)) = unit_fraction(n) + unit_fraction_sum(denominators)","proof":[]}
+{"goal":"unit_fraction(n) + remainder = unit_fraction(n) + unit_fraction_sum(denominators)","proof":[]}
+{"goal":"unit_fraction(n) + remainder = unit_fraction_sum(List.cons(n, denominators))","proof":[]}
+{"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and unit_fraction(n) + remainder = unit_fraction_sum(k0) }","proof":["function(x0: List[Nat]) { not (egyptian_denominator_list(x0) and unit_fraction_sum(x0) = unit_fraction(n) + remainder) }(List.cons(n, denominators))"]}
+{"goal":"is_egyptian_fraction(unit_fraction(n) + remainder)","proof":["let w0: List[Nat] satisfy { egyptian_denominator_list(w0) and unit_fraction_sum(w0) = unit_fraction(n) + remainder }","function(x0: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and unit_fraction_sum(k0) = x0 } = is_egyptian_fraction(x0) }(unit_fraction(n) + remainder)"]}
+{"goal":"unit_fraction(n) + remainder = q","proof":["function(x0: Rat, x1: Rat) { x0 - x1 + x1 = x0 }(q, unit_fraction(n))","function(x0: Rat, x1: Rat) { x0 + x1 = x1 + x0 }(unit_fraction(n), q - unit_fraction(n))"]}
+{"goal":"is_egyptian_fraction(q)","proof":[]}
+{"goal":"egyptian_fraction_of_lower_bound_remainder","proof":[]}
+{"goal":"not denominators.contains(n)","proof":[]}
+{"goal":"egyptian_denominator_list(List.cons(n, denominators))","proof":[]}
+{"goal":"denominator_list_lower_bound(n, List.cons(n, denominators))","proof":[]}
+{"goal":"unit_fraction_sum(List.cons(n, denominators)) = unit_fraction(n) + unit_fraction_sum(denominators)","proof":[]}
+{"goal":"unit_fraction_sum(List.cons(n, denominators)) = unit_fraction(n) + q","proof":[]}
+{"goal":"unit_fraction(n) + q = unit_fraction_sum(List.cons(n, denominators))","proof":[]}
+{"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(n, k0) and unit_fraction(n) + q = unit_fraction_sum(k0) }","proof":["function(x0: List[Nat]) { not (egyptian_denominator_list(x0) and denominator_list_lower_bound(n, x0) and unit_fraction_sum(x0) = unit_fraction(n) + q) }(List.cons(n, denominators))"]}
+{"goal":"is_lower_bounded_egyptian_fraction(unit_fraction(n) + q, n)","proof":["let w0: List[Nat] satisfy { egyptian_denominator_list(w0) and denominator_list_lower_bound(n, w0) and unit_fraction_sum(w0) = unit_fraction(n) + q }","function(x0: Nat, x1: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(x0, k0) and unit_fraction_sum(k0) = x1 } = is_lower_bounded_egyptian_fraction(x1, x0) }(n, unit_fraction(n) + q)"]}
+{"goal":"lower_bounded_egyptian_fraction_add_lower_bound_unit","proof":[]}
+{"goal":"is_lower_bounded_egyptian_fraction(q, bound) = exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(bound, k0) and q = unit_fraction_sum(k0) }","proof":["function(x0: Nat, x1: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(x0, k0) and unit_fraction_sum(k0) = x1 } = is_lower_bounded_egyptian_fraction(x1, x0) }(bound, q)"]}
+{"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(bound, k0) and q = unit_fraction_sum(k0) }","proof":[]}
+{"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and q = unit_fraction_sum(k0) }","proof":["function(x0: List[Nat]) { not (egyptian_denominator_list(x0) and unit_fraction_sum(x0) = q) }(denominators)"]}
+{"goal":"is_egyptian_fraction(q)","proof":["let w0: List[Nat] satisfy { egyptian_denominator_list(w0) and unit_fraction_sum(w0) = q }","function(x0: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and unit_fraction_sum(k0) = x0 } = is_egyptian_fraction(x0) }(q)"]}
+{"goal":"lower_bounded_egyptian_fraction_is_egyptian","proof":[]}
 {"goal":"unit_fraction(n) = unit_fraction_sum(List.singleton(n))","proof":[]}
 {"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and unit_fraction(n) = unit_fraction_sum(k0) }","proof":["egyptian_denominator_list(List.singleton(n))","function(x0: List[Nat]) { not (egyptian_denominator_list(x0) and unit_fraction(n) = unit_fraction_sum(x0)) }(List.singleton(n))"]}
 {"goal":"unit_fraction_is_egyptian","proof":["function(x0: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and unit_fraction_sum(k0) = x0 } = is_egyptian_fraction(x0) }(unit_fraction(n))"]}
+{"goal":"is_lower_bound(List.singleton(n), bound) = bound <= n","proof":[]}
+{"goal":"denominator_list_lower_bound(bound, List.singleton(n))","proof":["function(x0: List[Nat], x1: Nat) { is_lower_bound(x0, x1) = denominator_list_lower_bound(x1, x0) }(List.singleton(n), bound)"]}
+{"goal":"unit_fraction(n) = unit_fraction_sum(List.singleton(n))","proof":[]}
+{"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(bound, k0) and unit_fraction(n) = unit_fraction_sum(k0) }","proof":["function(x0: List[Nat]) { not (egyptian_denominator_list(x0) and denominator_list_lower_bound(bound, x0) and unit_fraction(n) = unit_fraction_sum(x0)) }(List.singleton(n))"]}
+{"goal":"unit_fraction_is_egyptian_with_lower_bound","proof":["function(x0: Nat, x1: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(x0, k0) and unit_fraction_sum(k0) = x1 } = is_egyptian_fraction_with_lower_bound(x1, x0) }(bound, unit_fraction(n))"]}
+{"goal":"not denominators.contains(n)","proof":[]}
+{"goal":"egyptian_denominator_list(List.cons(n, denominators))","proof":[]}
+{"goal":"n <= n.suc","proof":["function(x0: Nat, x1: Nat) { not x0 < x1 or not x1 < x0 }(n, n.suc)","function(x0: Nat, x1: Nat) { x0 < x1 or x1 <= x0 }(n.suc, n)"]}
+{"goal":"denominator_list_lower_bound(n, denominators)","proof":[]}
+{"goal":"n <= n","proof":["function(x0: Nat, x1: Nat) { not x0 < x1 or x0.suc <= x1 }(n, n.suc)","function(x0: Nat, x1: Nat) { not x0.suc <= x1.suc or x0 <= x1 }(n, n)"]}
+{"goal":"denominator_list_lower_bound(n, List.cons(n, denominators))","proof":[]}
+{"goal":"remainder = unit_fraction_sum(denominators)","proof":[]}
+{"goal":"unit_fraction_sum(List.cons(n, denominators)) = unit_fraction(n) + unit_fraction_sum(denominators)","proof":[]}
+{"goal":"unit_fraction(n) + remainder = unit_fraction(n) + unit_fraction_sum(denominators)","proof":[]}
+{"goal":"unit_fraction(n) + remainder = unit_fraction_sum(List.cons(n, denominators))","proof":[]}
+{"goal":"unit_fraction(n) + remainder = q","proof":["function(x0: Rat, x1: Rat) { x0 - x1 + x1 = x0 }(q, unit_fraction(n))","function(x0: Rat, x1: Rat) { x0 + x1 = x1 + x0 }(unit_fraction(n), q - unit_fraction(n))"]}
+{"goal":"q = unit_fraction_sum(List.cons(n, denominators))","proof":[]}
+{"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(n, k0) and q = unit_fraction_sum(k0) }","proof":["denominator_list_lower_bound(n, List.cons(n, denominators))","function(x0: List[Nat]) { not (egyptian_denominator_list(x0) and denominator_list_lower_bound(n, x0) and unit_fraction_sum(x0) = q) }(List.cons(n, denominators))"]}
+{"goal":"egyptian_fraction_with_lower_bound_of_lower_bound_remainder","proof":["function(x0: Nat, x1: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(x0, k0) and unit_fraction_sum(k0) = x1 } = is_egyptian_fraction_with_lower_bound(x1, x0) }(n, q)"]}
+{"goal":"exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(n.suc, k0) and q - unit_fraction(n) = unit_fraction_sum(k0) }","proof":["function(x0: Nat, x1: Rat) { exists(k0: List[Nat]) { egyptian_denominator_list(k0) and denominator_list_lower_bound(x0, k0) and unit_fraction_sum(k0) = x1 } = is_egyptian_fraction_with_lower_bound(x1, x0) }(n.suc, q - unit_fraction(n))"]}
+{"goal":"is_egyptian_fraction_with_lower_bound(q, n)","proof":[]}
+{"goal":"egyptian_fraction_with_lower_bound_of_remainder","proof":[]}
+{"goal":"positive_lt_unit_fraction_by_num_prev_case(k, q, prev) = (q.is_positive and q < unit_fraction(prev) and q.num = Int.from_nat(k.suc) implies is_egyptian_fraction_with_lower_bound(q, prev.suc))","proof":["function(x0: Rat, x1: Nat, x2: Nat) { (not x0.is_positive or not x0 < unit_fraction(x1) or Int.from_nat(x2.suc) != x0.num or is_egyptian_fraction_with_lower_bound(x0, x1.suc)) = positive_lt_unit_fraction_by_num_prev_case(x2, x0, x1) }(q, prev, k)"]}
+{"goal":"positive_lt_unit_fraction_by_num_prev_case(k, q, prev)","proof":[]}
+{"goal":"positive_lt_unit_fraction_by_num_prev_case_intro","proof":[]}
+{"goal":"positive_lt_unit_fraction_by_num_prev_case(k, q, prev) = (q.is_positive and q < unit_fraction(prev) and q.num = Int.from_nat(k.suc) implies is_egyptian_fraction_with_lower_bound(q, prev.suc))","proof":["function(x0: Rat, x1: Nat, x2: Nat) { (not x0.is_positive or not x0 < unit_fraction(x1) or Int.from_nat(x2.suc) != x0.num or is_egyptian_fraction_with_lower_bound(x0, x1.suc)) = positive_lt_unit_fraction_by_num_prev_case(x2, x0, x1) }(q, prev, k)"]}
+{"goal":"is_egyptian_fraction_with_lower_bound(q, prev.suc)","proof":[]}
+{"goal":"positive_lt_unit_fraction_by_num_prev_case_apply","proof":[]}
+{"goal":"positive_lt_unit_fraction_by_num_case(k, q) = forall(x0: Nat) { positive_lt_unit_fraction_by_num_prev_case(k, q, x0) }","proof":["function(x0: Nat, x1: Rat) { forall(x2: Nat) { positive_lt_unit_fraction_by_num_prev_case(x0, x1, x2) } = positive_lt_unit_fraction_by_num_case(x0, x1) }(k, q)"]}
+{"goal":"positive_lt_unit_fraction_by_num_case(k, q)","proof":["let w0: Nat satisfy { not positive_lt_unit_fraction_by_num_prev_case(k, q, w0) }","function(x0: Nat) { positive_lt_unit_fraction_by_num_prev_case(k, q, x0) }(w0)"]}
+{"goal":"positive_lt_unit_fraction_by_num_case_intro","proof":["let w0: Nat satisfy { not positive_lt_unit_fraction_by_num_prev_case(k, q, w0) }","function(x0: Nat) { positive_lt_unit_fraction_by_num_prev_case(k, q, x0) }(w0)"]}
+{"goal":"positive_lt_unit_fraction_by_num_case(k, q) = forall(x0: Nat) { positive_lt_unit_fraction_by_num_prev_case(k, q, x0) }","proof":["function(x0: Nat, x1: Rat) { forall(x2: Nat) { positive_lt_unit_fraction_by_num_prev_case(x0, x1, x2) } = positive_lt_unit_fraction_by_num_case(x0, x1) }(k, q)"]}
+{"goal":"positive_lt_unit_fraction_by_num_prev_case(k, q, prev)","proof":["function[T0](x0: T0 -> Bool) { not exists(k0: T0) { not x0(k0) } or not forall(x1: T0) { x0(x1) } }[Nat](positive_lt_unit_fraction_by_num_prev_case(k, q))","not positive_lt_unit_fraction_by_num_case(k, q) or forall(x0: Nat) { positive_lt_unit_fraction_by_num_prev_case(k, q, x0) } = true","positive_lt_unit_fraction_by_num_case(k, q) and q.is_positive and q < unit_fraction(prev)","positive_lt_unit_fraction_by_num_case(k, q)","function[T0](x0: T0 -> Bool, x1: T0) { not forall(x2: T0) { x0(x2) } or x0(x1) }[Nat](positive_lt_unit_fraction_by_num_prev_case(k, q), prev)"]}
+{"goal":"is_egyptian_fraction_with_lower_bound(q, prev.suc)","proof":[]}
+{"goal":"positive_lt_unit_fraction_by_num_case_apply","proof":[]}
+{"goal":"positive_lt_unit_fraction_by_num_all_case(k) = forall(x0: Rat) { positive_lt_unit_fraction_by_num_case(k, x0) }","proof":["function(x0: Nat) { forall(x1: Rat) { positive_lt_unit_fraction_by_num_case(x0, x1) } = positive_lt_unit_fraction_by_num_all_case(x0) }(k)"]}
+{"goal":"positive_lt_unit_fraction_by_num_all_case(k)","proof":["let w0: Rat satisfy { not positive_lt_unit_fraction_by_num_case(k, w0) }","function(x0: Rat) { positive_lt_unit_fraction_by_num_case(k, x0) }(w0)"]}
+{"goal":"positive_lt_unit_fraction_by_num_all_case_intro","proof":["let w0: Rat satisfy { not positive_lt_unit_fraction_by_num_case(k, w0) }","function(x0: Rat) { positive_lt_unit_fraction_by_num_case(k, x0) }(w0)"]}
+{"goal":"positive_lt_unit_fraction_by_num_all_case(k) = forall(x0: Rat) { positive_lt_unit_fraction_by_num_case(k, x0) }","proof":["function(x0: Nat) { forall(x1: Rat) { positive_lt_unit_fraction_by_num_case(x0, x1) } = positive_lt_unit_fraction_by_num_all_case(x0) }(k)"]}
+{"goal":"positive_lt_unit_fraction_by_num_case(k, q)","proof":["(forall(x0: Rat) { positive_lt_unit_fraction_by_num_case(k, x0) } = true)","function(x0: Rat) { positive_lt_unit_fraction_by_num_case(k, x0) }(q)"]}
+{"goal":"positive_lt_unit_fraction_by_num_all_case_apply","proof":[]}
+{"goal":"unit_fraction(lower_prev) = Rat.0","proof":[]}
+{"goal":"Rat.0 < r","proof":[]}
+{"goal":"Rat.0 < Rat.0","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"lower_prev != 0","proof":[]}
+{"goal":"exists(k0: Nat) { lower_prev = k0.suc }","proof":[]}
+{"goal":"0 < lower_prev","proof":["function(x0: Nat, x1: Nat) { x0 < x0 + x1.suc }(0, lower_pred)","function[T0: lib(add_monoid).AddMonoid](x0: T0) { T0.0 + x0 = x0 }[Nat](lower_prev)"]}
+{"goal":"1 <= lower_prev","proof":["function(x0: Nat, x1: Nat) { x0 <= x0 * x1 or 0 = x1 }(1, lower_prev)","function[T0: lib(monoid).Monoid](x0: T0) { T0.1 * x0 = x0 }[Nat](lower_prev)"]}
+{"goal":"unit_fraction(lower_prev) <= unit_fraction(1)","proof":["function(x0: Nat) { x0 < x0.suc }(0)"]}
+{"goal":"unit_fraction(lower_prev) <= Rat.1","proof":[]}
+{"goal":"r < Rat.1","proof":[]}
+{"goal":"exists(k0: Nat) { unit_fraction_ceiling_step(r, k0) }","proof":[]}
+{"goal":"0 < n","proof":[]}
+{"goal":"unit_fraction(n) <= r","proof":[]}
+{"goal":"unit_fraction(lower_prev) <= unit_fraction(n)","proof":[]}
+{"goal":"unit_fraction(lower_prev) <= r","proof":[]}
+{"goal":"unit_fraction(lower_prev) < unit_fraction(lower_prev)","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"not n <= lower_prev","proof":[]}
+{"goal":"lower_prev < n","proof":[]}
+{"goal":"lower_prev.suc <= n","proof":[]}
+{"goal":"is_egyptian_fraction_with_lower_bound(unit_fraction(n), lower_prev.suc)","proof":[]}
+{"goal":"is_egyptian_fraction_with_lower_bound(r, lower_prev.suc)","proof":[]}
+{"goal":"r != unit_fraction(n)","proof":[]}
+{"goal":"(r - unit_fraction(n)).is_positive","proof":[]}
+{"goal":"remainder.is_positive","proof":[]}
+{"goal":"r - unit_fraction(n) < unit_fraction(n)","proof":[]}
+{"goal":"remainder < unit_fraction(n)","proof":[]}
+{"goal":"remainder.num.is_positive = remainder.is_positive","proof":["function(x0: Rat) { x0.num.is_positive = x0.is_positive }(remainder)"]}
+{"goal":"remainder.num.is_positive","proof":[]}
+{"goal":"exists(k0: Nat) { remainder.num = Int.from_nat(k0.suc) }","proof":[]}
+{"goal":"(r - unit_fraction(n)).num < r.num","proof":[]}
+{"goal":"remainder.num < r.num","proof":[]}
+{"goal":"Int.from_nat(j.suc) < Int.from_nat(m.suc)","proof":[]}
+{"goal":"Int.from_nat(j.suc) <= Int.from_nat(m.suc)","proof":["function[T0: lib(order).PartialOrder](x0: T0, x1: T0) { not x0 < x1 or x0 <= x1 }[Int](Int.from_nat(j.suc), Int.from_nat(m.suc))"]}
+{"goal":"j.suc <= m.suc","proof":[]}
+{"goal":"j <= m","proof":[]}
+{"goal":"j = m","proof":[]}
+{"goal":"Int.from_nat(j.suc) = Int.from_nat(m.suc)","proof":[]}
+{"goal":"Int.from_nat(j.suc) < Int.from_nat(j.suc)","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"not m <= j","proof":[]}
+{"goal":"j < m","proof":[]}
+{"goal":"positive_lt_unit_fraction_by_num_all_case(j)","proof":[]}
+{"goal":"positive_lt_unit_fraction_by_num_case(j, remainder)","proof":[]}
+{"goal":"is_egyptian_fraction_with_lower_bound(remainder, n.suc)","proof":[]}
+{"goal":"is_egyptian_fraction_with_lower_bound(r - unit_fraction(n), n.suc)","proof":[]}
+{"goal":"is_egyptian_fraction_with_lower_bound(r, n)","proof":[]}
+{"goal":"is_egyptian_fraction_with_lower_bound(r, lower_prev.suc)","proof":[]}
+{"goal":"r.is_positive and r < unit_fraction(lower_prev) and r.num = Int.from_nat(m.suc) implies is_egyptian_fraction_with_lower_bound(r, lower_prev.suc)","proof":[]}
+{"goal":"positive_lt_unit_fraction_by_num_prev_case(m, r, lower_prev)","proof":[]}
+{"goal":"positive_lt_unit_fraction_by_num_prev_case(m, r, lower_prev)","proof":["function(x0: Nat) { positive_lt_unit_fraction_by_num_prev_case(m, r, x0) }(lower_prev)"]}
+{"goal":"positive_lt_unit_fraction_by_num_case(m, r)","proof":["let w0: Nat satisfy { not positive_lt_unit_fraction_by_num_prev_case(m, r, w0) }","function(x0: Nat) { positive_lt_unit_fraction_by_num_prev_case(m, r, x0) }(w0)"]}
+{"goal":"positive_lt_unit_fraction_by_num_case(m, r)","proof":["function(x0: Rat) { positive_lt_unit_fraction_by_num_case(m, x0) }(r)"]}
+{"goal":"positive_lt_unit_fraction_by_num_all_case(m)","proof":["let w0: Rat satisfy { not positive_lt_unit_fraction_by_num_case(m, w0) }","function(x0: Rat) { positive_lt_unit_fraction_by_num_case(m, x0) }(w0)"]}
+{"goal":"positive_lt_unit_fraction_by_num_all_case_step","proof":[]}
+{"goal":"positive_lt_unit_fraction_by_num_all_case_step_all","proof":["let w0: Nat satisfy { true_below(positive_lt_unit_fraction_by_num_all_case, w0) and not positive_lt_unit_fraction_by_num_all_case(w0) }","function(x0: Nat) { not true_below(positive_lt_unit_fraction_by_num_all_case, x0) or positive_lt_unit_fraction_by_num_all_case(x0) }(w0)"]}
+{"goal":"true_below(positive_lt_unit_fraction_by_num_all_case, 0)","proof":[]}
+{"goal":"g(0)","proof":[]}
+{"goal":"true_below(positive_lt_unit_fraction_by_num_all_case, k)","proof":[]}
+{"goal":"true_below(positive_lt_unit_fraction_by_num_all_case, k)","proof":[]}
+{"goal":"positive_lt_unit_fraction_by_num_all_case(k)","proof":[]}
+{"goal":"positive_lt_unit_fraction_by_num_all_case(k)","proof":[]}
+{"goal":"true_below(positive_lt_unit_fraction_by_num_all_case, k.suc)","proof":[]}
+{"goal":"g(k.suc)","proof":[]}
+{"goal":"g(k) implies g(k.suc)","proof":[]}
+{"goal":"g(k) implies g(k.suc)","proof":["function(x0: Nat) { not g(x0) or g(x0.suc) }(k)"]}
+{"goal":"g(0) and forall(x0: Nat) { g(x0) implies g(x0.suc) }","proof":["let w0: Nat satisfy { g(w0) and not g(w0.suc) }","function(x0: Nat) { not g(x0) or g(x0.suc) }(w0)"]}
+{"goal":"g(k)","proof":["function[T0](x0: T0) { lib(functions).identity_fn[T0](x0) = x0 }[Nat](k)","not forall(x0: Nat) { not g(x0) or g(x0.suc) } or forall(x1: Nat) { g(x1) } = true","not g(lib(functions).identity_fn(k))","(forall(x2: Nat) { not g(x2) or g(x2.suc) } = true)","function(x0: Nat) { g(x0) }(lib(functions).identity_fn(k))"]}
+{"goal":"true_below(positive_lt_unit_fraction_by_num_all_case, k)","proof":["function(x0: Nat) { g(x0) }(k)"]}
+{"goal":"true_below(positive_lt_unit_fraction_by_num_all_case, k)","proof":[]}
+{"goal":"positive_lt_unit_fraction_by_num_all_case(k)","proof":[]}
+{"goal":"positive_lt_unit_fraction_by_num_all_case_all","proof":["let w0: Nat satisfy { not positive_lt_unit_fraction_by_num_all_case(w0) }","function(x0: Nat) { positive_lt_unit_fraction_by_num_all_case(x0) }(w0)"]}
+{"goal":"positive_lt_unit_fraction_by_num_all_case(k)","proof":["function(x0: Nat) { positive_lt_unit_fraction_by_num_all_case(x0) }(k)"]}
+{"goal":"positive_lt_unit_fraction_by_num_case(k, q)","proof":[]}
+{"goal":"is_egyptian_fraction_with_lower_bound(q, prev.suc)","proof":[]}
+{"goal":"positive_lt_unit_fraction_is_egyptian_with_lower_bound_of_num","proof":[]}
+{"goal":"q.num.is_positive = q.is_positive","proof":["function(x0: Rat) { x0.num.is_positive = x0.is_positive }(q)"]}
+{"goal":"q.num.is_positive","proof":[]}
+{"goal":"exists(k0: Nat) { q.num = Int.from_nat(k0.suc) }","proof":[]}
+{"goal":"is_egyptian_fraction_with_lower_bound(q, prev.suc)","proof":[]}
+{"goal":"positive_lt_unit_fraction_is_egyptian_with_lower_bound","proof":[]}
+{"goal":"q < unit_fraction(1)","proof":[]}
+{"goal":"is_egyptian_fraction_with_lower_bound(q, 1.suc)","proof":[]}
+{"goal":"1.suc = 2","proof":[]}
+{"goal":"is_egyptian_fraction_with_lower_bound(q, 2)","proof":[]}
+{"goal":"positive_lt_one_is_egyptian_with_lower_bound_two","proof":[]}
+{"goal":"is_egyptian_fraction_with_lower_bound(q, 2)","proof":[]}
+{"goal":"is_egyptian_fraction(q)","proof":[]}
+{"goal":"positive_lt_one_is_egyptian","proof":[]}

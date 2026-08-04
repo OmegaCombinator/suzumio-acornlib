@@ -43,6 +43,7 @@ from nat import divides_self, divides_zero, has_prime_divisor, strong_induction,
     divides_trans, mul_cancel_left, mul_to_zero, divides_mul_left, add_cancels_left
 from list import List, list_not_contains_impl_count_zero
 from list import product
+from list import map, sum
 from list import is_permutation, remove_one_count_self, remove_one_count_other, remove_one_cons_eq,
     remove_one_cons_neq, nil_count_zero, product_remove_one, count_append, product_append,
     permutation_preserves_product
@@ -233,6 +234,385 @@ theorem kummer_digit_sum_of_legendre_digit_sum(p: Nat, a: Nat, b: Nat) {
         count_prime_factor(p, (a + b).binom(a)) + digit_sum(p, a) + digit_sum(p, b)
 }
 
+// erdos396.ac
+/// The central binomial coefficient.
+define central_binom(n: Nat) -> Nat {
+    (n + n).binom(n)
+}
+
+/// The `i`th factor in the falling product from `n`.
+define falling_product_factor(n: Nat, i: Nat) -> Nat {
+    n - i
+}
+
+/// The prime multiplicity of the `i`th factor in the falling product from `n`.
+define falling_product_factor_count(p: Nat, n: Nat, i: Nat) -> Nat {
+    count_prime_factor(p, falling_product_factor(n, i))
+}
+
+/// The factors `n, n - 1, ..., n - k` as a list.
+define falling_product_factors(n: Nat, k: Nat) -> List[Nat] {
+    map(k.suc.range, falling_product_factor(n))
+}
+
+/// The prime multiplicities of the factors `n, n - 1, ..., n - k` as a list.
+define falling_product_factor_counts(p: Nat, n: Nat, k: Nat) -> List[Nat] {
+    map(k.suc.range, falling_product_factor_count(p, n))
+}
+
+/// The product `n * (n - 1) * ... * (n - k)`.
+define falling_product(n: Nat, k: Nat) -> Nat {
+    match k {
+        Nat.zero {
+            n
+        }
+        Nat.suc(j) {
+            falling_product(n, j) * (n - k)
+        }
+    }
+}
+
+/// The sum of prime multiplicities in the factors of a falling product.
+define falling_product_prime_count_sum(p: Nat, n: Nat, k: Nat) -> Nat {
+    match k {
+        Nat.zero {
+            count_prime_factor(p, n)
+        }
+        Nat.suc(j) {
+            falling_product_prime_count_sum(p, n, j) +
+                count_prime_factor(p, n - k)
+        }
+    }
+}
+
+/// True if `n` witnesses the divisibility in Erdos problem 396 for `k`.
+define erdos396_witness(k: Nat, n: Nat) -> Bool {
+    k < n and falling_product(n, k).divides(central_binom(n))
+}
+
+/// The central binomial coefficient unfolds to its defining binomial coefficient.
+theorem central_binom_eq(n: Nat) {
+    central_binom(n) = (n + n).binom(n)
+}
+
+/// The zeroth central binomial coefficient is one.
+theorem central_binom_zero {
+    central_binom(Nat.0) = Nat.1
+}
+
+/// The first central binomial coefficient is two.
+theorem central_binom_one {
+    central_binom(Nat.1) = Nat.2
+}
+
+/// The central binomial coefficient is nonzero.
+theorem central_binom_ne_zero(n: Nat) {
+    central_binom(n) != Nat.0
+}
+
+/// The zeroth falling product is the top factor.
+theorem falling_product_zero(n: Nat) {
+    falling_product(n, Nat.0) = n
+}
+
+/// Extending a falling product appends the next lower factor.
+theorem falling_product_suc(n: Nat, k: Nat) {
+    falling_product(n, k.suc) = falling_product(n, k) * (n - k.suc)
+}
+
+/// The zeroth falling-product factor list is the singleton list containing `n`.
+theorem falling_product_factors_zero(n: Nat) {
+    falling_product_factors(n, Nat.0) = List.singleton(n)
+}
+
+/// Extending the factor list appends the next lower factor.
+theorem falling_product_factors_suc(n: Nat, k: Nat) {
+    falling_product_factors(n, k.suc) =
+        falling_product_factors(n, k).append(n - k.suc)
+}
+
+/// The zeroth falling-product factor-count list is the singleton list
+/// containing the valuation of `n`.
+theorem falling_product_factor_counts_zero(p: Nat, n: Nat) {
+    falling_product_factor_counts(p, n, Nat.0) =
+        List.singleton(count_prime_factor(p, n))
+}
+
+/// Extending the factor-count list appends the valuation of the next lower
+/// factor.
+theorem falling_product_factor_counts_suc(p: Nat, n: Nat, k: Nat) {
+    falling_product_factor_counts(p, n, k.suc) =
+        falling_product_factor_counts(p, n, k).append(count_prime_factor(p, n - k.suc))
+}
+
+/// The zeroth falling-product valuation sum is the valuation of the top factor.
+theorem falling_product_prime_count_sum_zero(p: Nat, n: Nat) {
+    falling_product_prime_count_sum(p, n, Nat.0) = count_prime_factor(p, n)
+}
+
+/// Extending the valuation sum appends the valuation of the next factor.
+theorem falling_product_prime_count_sum_suc(p: Nat, n: Nat, k: Nat) {
+    falling_product_prime_count_sum(p, n, k.suc) =
+        falling_product_prime_count_sum(p, n, k) + count_prime_factor(p, n - k.suc)
+}
+
+/// The recursive falling product is the product of its factor list.
+theorem falling_product_eq_product_factors(n: Nat, k: Nat) {
+    falling_product(n, k) = product[Nat](falling_product_factors(n, k))
+}
+
+/// The recursive falling-product valuation sum is the sum of its
+/// factor-count list.
+theorem falling_product_prime_count_sum_eq_sum_factor_counts(p: Nat, n: Nat, k: Nat) {
+    falling_product_prime_count_sum(p, n, k) =
+        sum[Nat](falling_product_factor_counts(p, n, k))
+}
+
+/// The falling product with two factors.
+theorem falling_product_one(n: Nat) {
+    falling_product(n, Nat.1) = n * (n - Nat.1)
+}
+
+/// The falling product with three factors.
+theorem falling_product_two(n: Nat) {
+    falling_product(n, Nat.2) = n * (n - Nat.1) * (n - Nat.2)
+}
+
+/// The factor list for the falling product with two factors.
+theorem falling_product_factors_one(n: Nat) {
+    falling_product_factors(n, Nat.1) =
+        List.cons(n, List.cons(n - Nat.1, List.nil[Nat]))
+}
+
+/// The factor list for the falling product with three factors.
+theorem falling_product_factors_two(n: Nat) {
+    falling_product_factors(n, Nat.2) =
+        List.cons(n, List.cons(n - Nat.1, List.cons(n - Nat.2, List.nil[Nat])))
+}
+
+/// The factor-count list for the falling product with two factors.
+theorem falling_product_factor_counts_one(p: Nat, n: Nat) {
+    falling_product_factor_counts(p, n, Nat.1) =
+        List.cons(count_prime_factor(p, n),
+            List.cons(count_prime_factor(p, n - Nat.1), List.nil[Nat]))
+}
+
+/// The factor-count list for the falling product with three factors.
+theorem falling_product_factor_counts_two(p: Nat, n: Nat) {
+    falling_product_factor_counts(p, n, Nat.2) =
+        List.cons(count_prime_factor(p, n),
+            List.cons(count_prime_factor(p, n - Nat.1),
+                List.cons(count_prime_factor(p, n - Nat.2), List.nil[Nat])))
+}
+
+/// The valuation sum for the falling product with two factors.
+theorem falling_product_prime_count_sum_one(p: Nat, n: Nat) {
+    falling_product_prime_count_sum(p, n, Nat.1) =
+        count_prime_factor(p, n) + count_prime_factor(p, n - Nat.1)
+}
+
+/// The valuation sum for the falling product with three factors.
+theorem falling_product_prime_count_sum_two(p: Nat, n: Nat) {
+    falling_product_prime_count_sum(p, n, Nat.2) =
+        count_prime_factor(p, n) +
+        count_prime_factor(p, n - Nat.1) +
+        count_prime_factor(p, n - Nat.2)
+}
+
+/// A falling product with all factors strictly positive is nonzero.
+theorem falling_product_nonzero(n: Nat, k: Nat) {
+    k < n implies falling_product(n, k) != Nat.0
+}
+
+/// The prime multiplicity of a falling product is the sum of the multiplicities
+/// of its factors.
+theorem count_prime_factor_falling_product(p: Nat, n: Nat, k: Nat) {
+    k < n implies
+        count_prime_factor(p, falling_product(n, k)) =
+        falling_product_prime_count_sum(p, n, k)
+}
+
+/// A falling product is the initial quotient of `n!` by the remaining
+/// factorial.
+theorem falling_product_mul_factorial_complement(n: Nat, k: Nat) {
+    k < n implies
+        falling_product(n, k) * (n - k.suc).factorial = n.factorial
+}
+
+/// Every positive falling product from `n` divides `n!`.
+theorem falling_product_divides_factorial(n: Nat, k: Nat) {
+    k < n implies falling_product(n, k).divides(n.factorial)
+}
+
+/// Each falling product divides itself.
+theorem falling_product_divides_self(n: Nat, k: Nat) {
+    falling_product(n, k).divides(falling_product(n, k))
+}
+
+/// A falling product divides the product with one more factor.
+theorem falling_product_divides_suc(n: Nat, k: Nat) {
+    falling_product(n, k).divides(falling_product(n, k.suc))
+}
+
+/// Shorter falling products divide longer falling products.
+theorem falling_product_prefix_divides(n: Nat, j: Nat, k: Nat) {
+    j <= k implies falling_product(n, j).divides(falling_product(n, k))
+}
+
+/// A witness for a longer falling product is a witness for every prefix.
+theorem erdos396_witness_prefix(j: Nat, k: Nat, n: Nat) {
+    j <= k and erdos396_witness(k, n) implies erdos396_witness(j, n)
+}
+
+/// Prime valuation bounds imply the divisibility in Erdos problem 396.
+theorem erdos396_witness_of_prime_valuation_bounds(k: Nat, n: Nat) {
+    k < n and
+    (forall(p: Nat) {
+        p.is_prime implies
+            count_prime_factor(p, falling_product(n, k)) <=
+            count_prime_factor(p, central_binom(n))
+    })
+    implies erdos396_witness(k, n)
+}
+
+/// A witness gives the corresponding prime valuation bounds.
+theorem erdos396_prime_valuation_bounds_of_witness(k: Nat, n: Nat) {
+    erdos396_witness(k, n) implies
+    forall(p: Nat) {
+        p.is_prime implies
+            count_prime_factor(p, falling_product(n, k)) <=
+            count_prime_factor(p, central_binom(n))
+    }
+}
+
+/// For positive falling products, the witness predicate is exactly the prime
+/// valuation bound against the central binomial coefficient.
+theorem erdos396_witness_iff_prime_valuation_bounds(k: Nat, n: Nat) {
+    k < n implies
+    erdos396_witness(k, n) =
+    forall(p: Nat) {
+        p.is_prime implies
+            count_prime_factor(p, falling_product(n, k)) <=
+            count_prime_factor(p, central_binom(n))
+    }
+}
+
+/// Bounds on the factor-by-factor valuation sum imply the divisibility in
+/// Erdos problem 396.
+theorem erdos396_witness_of_prime_count_sum_bounds(k: Nat, n: Nat) {
+    k < n and
+    (forall(p: Nat) {
+        p.is_prime implies
+            falling_product_prime_count_sum(p, n, k) <=
+            count_prime_factor(p, central_binom(n))
+    })
+    implies erdos396_witness(k, n)
+}
+
+/// A witness gives the corresponding bounds on the factor-by-factor valuation
+/// sum.
+theorem erdos396_prime_count_sum_bounds_of_witness(k: Nat, n: Nat) {
+    erdos396_witness(k, n) implies
+    forall(p: Nat) {
+        p.is_prime implies
+            falling_product_prime_count_sum(p, n, k) <=
+            count_prime_factor(p, central_binom(n))
+    }
+}
+
+/// For positive falling products, the witness predicate is exactly the
+/// factor-by-factor valuation-sum bound against the central binomial
+/// coefficient.
+theorem erdos396_witness_iff_prime_count_sum_bounds(k: Nat, n: Nat) {
+    k < n implies
+    erdos396_witness(k, n) =
+    forall(p: Nat) {
+        p.is_prime implies
+            falling_product_prime_count_sum(p, n, k) <=
+            count_prime_factor(p, central_binom(n))
+    }
+}
+
+/// Bounds on the list sum of factor valuations imply the divisibility in
+/// Erdos problem 396.
+theorem erdos396_witness_of_factor_count_sum_bounds(k: Nat, n: Nat) {
+    k < n and
+    (forall(p: Nat) {
+        p.is_prime implies
+            sum[Nat](falling_product_factor_counts(p, n, k)) <=
+            count_prime_factor(p, central_binom(n))
+    })
+    implies erdos396_witness(k, n)
+}
+
+/// A witness gives the corresponding bounds on the list sum of factor
+/// valuations.
+theorem erdos396_factor_count_sum_bounds_of_witness(k: Nat, n: Nat) {
+    erdos396_witness(k, n) implies
+    forall(p: Nat) {
+        p.is_prime implies
+            sum[Nat](falling_product_factor_counts(p, n, k)) <=
+            count_prime_factor(p, central_binom(n))
+    }
+}
+
+/// For positive falling products, the witness predicate is exactly the list-sum
+/// valuation bound against the central binomial coefficient.
+theorem erdos396_witness_iff_factor_count_sum_bounds(k: Nat, n: Nat) {
+    k < n implies
+    erdos396_witness(k, n) =
+    forall(p: Nat) {
+        p.is_prime implies
+            sum[Nat](falling_product_factor_counts(p, n, k)) <=
+            count_prime_factor(p, central_binom(n))
+    }
+}
+
+/// Legendre's binomial valuation identity for central binomial coefficients.
+theorem central_binom_legendre(p: Nat, n: Nat) {
+    count_prime_factor(p, central_binom(n)) +
+        prime_factor_count_upto(p, n) +
+        prime_factor_count_upto(p, n) =
+        prime_factor_count_upto(p, n + n)
+}
+
+/// Kummer's digit-sum identity for central binomial coefficients.
+theorem central_binom_kummer_digit_sum(p: Nat, n: Nat) {
+    p.is_prime implies
+    p * count_prime_factor(p, central_binom(n)) + digit_sum(p, n + n) =
+        count_prime_factor(p, central_binom(n)) + digit_sum(p, n) + digit_sum(p, n)
+}
+
+/// Two is prime.
+theorem nat_two_prime {
+    Nat.2.is_prime
+}
+
+/// The 2-adic valuation of the central binomial coefficient is the binary
+/// digit sum of `n`.
+theorem central_binom_two_adic_valuation(n: Nat) {
+    count_prime_factor(Nat.2, central_binom(n)) = digit_sum(Nat.2, n)
+}
+
+/// Any witness has falling-product 2-adic valuation bounded by the binary
+/// digit sum of `n`.
+theorem erdos396_witness_binary_valuation_bound(k: Nat, n: Nat) {
+    erdos396_witness(k, n) implies
+        count_prime_factor(Nat.2, falling_product(n, k)) <= digit_sum(Nat.2, n)
+}
+
+/// Any witness has factor-sum 2-adic valuation bounded by the binary digit
+/// sum of `n`.
+theorem erdos396_witness_binary_count_sum_bound(k: Nat, n: Nat) {
+    erdos396_witness(k, n) implies
+        falling_product_prime_count_sum(Nat.2, n, k) <= digit_sum(Nat.2, n)
+}
+
+/// The smallest positive natural witnesses the case `k = 0`.
+theorem erdos396_witness_zero_one {
+    erdos396_witness(Nat.0, Nat.1)
+}
+
 
 // lcm.ac
 /// Zero is absorbing for lcm on the left.
@@ -398,7 +778,6 @@ define pairwise_coprime(list: List[Nat]) -> Bool {
 
 
 // crt_list.ac
-from list import map
 from pair import Pair
 
 /// True if c satisfies every congruence requirement in a list of
@@ -485,6 +864,153 @@ theorem satisfies_all_congruent_to_crt_list_solution(system: List[Pair[Nat, Nat]
         implies exists(c0: Nat) {
             satisfies_all(c0, system) and c.congr_mod(c0, system_modulus(system))
         }
+}
+
+
+// covering_system.ac
+/// True if an integer belongs to the congruence class represented by a
+/// `(modulus, residue)` pair.
+define congruence_class_contains(cl: Pair[Nat, Nat], x: Int) -> Bool {
+    int_mod_rel(cl.first, x, Int.from_nat(cl.second))
+}
+
+/// True if an integer belongs to at least one congruence class in a list.
+define covers_int(system: List[Pair[Nat, Nat]], x: Int) -> Bool {
+    match system {
+        List.nil {
+            false
+        }
+        List.cons(head, tail) {
+            congruence_class_contains(head, x) or covers_int(tail, x)
+        }
+    }
+}
+
+/// The empty list covers no integer.
+theorem covers_int_nil_false(x: Int) {
+    not covers_int(List.nil[Pair[Nat, Nat]], x)
+}
+
+/// Membership in a cons covering list unfolds to the head class or the tail.
+theorem covers_int_cons_imp(head: Pair[Nat, Nat], tail: List[Pair[Nat, Nat]], x: Int) {
+    covers_int(List.cons(head, tail), x)
+        implies congruence_class_contains(head, x) or covers_int(tail, x)
+}
+
+/// The head class covers every integer it contains.
+theorem covers_int_cons_left(head: Pair[Nat, Nat], tail: List[Pair[Nat, Nat]], x: Int) {
+    congruence_class_contains(head, x) implies covers_int(List.cons(head, tail), x)
+}
+
+/// A tail cover remains a cover after consing one more class.
+theorem covers_int_cons_right(head: Pair[Nat, Nat], tail: List[Pair[Nat, Nat]], x: Int) {
+    covers_int(tail, x) implies covers_int(List.cons(head, tail), x)
+}
+
+/// True if every integer is covered by the list of congruence classes.
+define covers_all_int(system: List[Pair[Nat, Nat]]) -> Bool {
+    forall(x: Int) {
+        covers_int(system, x)
+    }
+}
+
+/// A universal integer cover applies to any chosen integer.
+theorem covers_all_int_apply(system: List[Pair[Nat, Nat]], x: Int) {
+    covers_all_int(system) implies covers_int(system, x)
+}
+
+/// A pointwise cover of every integer is a universal integer cover.
+theorem covers_all_int_intro(system: List[Pair[Nat, Nat]]) {
+    (forall(x: Int) { covers_int(system, x) }) implies covers_all_int(system)
+}
+
+/// A covering system is a finite list of positive-modulus congruence classes
+/// whose union is all of the integers.
+define is_covering_system(system: List[Pair[Nat, Nat]]) -> Bool {
+    every_modulus_positive(system) and covers_all_int(system)
+}
+
+/// A covering system has positive moduli.
+theorem covering_system_moduli_positive(system: List[Pair[Nat, Nat]]) {
+    is_covering_system(system) implies every_modulus_positive(system)
+}
+
+/// A covering system covers every integer.
+theorem covering_system_covers_int(system: List[Pair[Nat, Nat]], x: Int) {
+    is_covering_system(system) implies covers_int(system, x)
+}
+
+/// Adding one positive congruence class to a covering system preserves coverage.
+theorem covering_system_cons_of_tail(head: Pair[Nat, Nat], tail: List[Pair[Nat, Nat]]) {
+    head.first != Nat.0 and is_covering_system(tail)
+        implies is_covering_system(List.cons(head, tail))
+}
+
+/// Congruence modulo one is the universal integer relation.
+theorem int_mod_rel_one(x: Int, y: Int) {
+    int_mod_rel(Nat.1, x, y)
+}
+
+/// Integer congruence is symmetric.
+theorem int_mod_rel_symm(m: Nat, x: Int, y: Int) {
+    int_mod_rel(m, x, y) implies int_mod_rel(m, y, x)
+}
+
+/// Integer congruence is transitive.
+theorem int_mod_rel_trans(m: Nat, x: Int, y: Int, z: Int) {
+    int_mod_rel(m, x, y) and int_mod_rel(m, y, z) implies int_mod_rel(m, x, z)
+}
+
+/// A congruence class is closed under congruence modulo its modulus.
+theorem congruence_class_contains_of_congruent(cl: Pair[Nat, Nat], x: Int, y: Int) {
+    int_mod_rel(cl.first, x, y) and congruence_class_contains(cl, y)
+        implies congruence_class_contains(cl, x)
+}
+
+/// The congruence class modulo one contains every integer.
+theorem congruence_class_mod_one_contains(r: Nat, x: Int) {
+    congruence_class_contains(Pair.new(Nat.1, r), x)
+}
+
+/// A single congruence class modulo one is a covering system.
+theorem singleton_mod_one_covering_system(r: Nat) {
+    is_covering_system(List.cons(Pair.new(Nat.1, r), List.nil[Pair[Nat, Nat]]))
+}
+
+/// The head modulus divides the combined modulus of a cons system.
+theorem head_modulus_divides_cons_modulus(head: Pair[Nat, Nat], tail: List[Pair[Nat, Nat]]) {
+    head.first.divides(system_modulus(List.cons(head, tail)))
+}
+
+/// The tail combined modulus divides the combined modulus of a cons system.
+theorem tail_modulus_divides_cons_modulus(head: Pair[Nat, Nat], tail: List[Pair[Nat, Nat]]) {
+    system_modulus(tail).divides(system_modulus(List.cons(head, tail)))
+}
+
+/// True if every residue below the combined system modulus is covered.
+define covers_all_residues(system: List[Pair[Nat, Nat]]) -> Bool {
+    forall(r: Nat) {
+        r < system_modulus(system) implies covers_int(system, Int.from_nat(r))
+    }
+}
+
+/// Pointwise residue coverage gives the finite residue-check predicate.
+theorem covers_all_residues_intro(system: List[Pair[Nat, Nat]]) {
+    (forall(r: Nat) {
+        r < system_modulus(system) implies covers_int(system, Int.from_nat(r))
+    }) implies covers_all_residues(system)
+}
+
+/// The finite residue-check predicate applies to each residue below the
+/// combined modulus.
+theorem covers_all_residues_apply(system: List[Pair[Nat, Nat]], r: Nat) {
+    covers_all_residues(system) and r < system_modulus(system)
+        implies covers_int(system, Int.from_nat(r))
+}
+
+/// Every covering system covers all residues below its combined modulus.
+theorem covering_system_covers_all_residues(system: List[Pair[Nat, Nat]]) {
+    is_covering_system(system) implies covers_all_residues(system)
 }
 
 
@@ -1125,7 +1651,7 @@ define positive_on_positive(f: Nat -> Nat) -> Bool {
 
 
 // divisor_sum.ac
-from list import sum, map_sum_add
+from list import map_sum_add
 from add_semigroup import add_fn
 
 /// The list of divisors `d` of `n` with `0 < d <= k`, in descending order.
@@ -1413,7 +1939,7 @@ define left_divisor_pair_list(n: Nat) -> List[Pair[Nat, Nat]] {
 
 // unit_fraction.ac
 from nat import from_nat
-from rat import Rat
+from rat import Rat, reduce
 from real import Real
 from list import is_lower_bound, is_upper_bound
 
@@ -1473,6 +1999,26 @@ define is_egyptian_fraction(q: Rat) -> Bool {
     }
 }
 
+/// True if a rational is represented by distinct unit fractions whose
+/// denominators are all at least `bound`.
+define is_egyptian_fraction_with_lower_bound(q: Rat, bound: Nat) -> Bool {
+    exists(denominators: List[Nat]) {
+        egyptian_denominator_list(denominators) and
+            denominator_list_lower_bound(bound, denominators) and
+            q = unit_fraction_sum(denominators)
+    }
+}
+
+/// True if a rational has an Egyptian representation using only denominators
+/// at least `bound`.
+define is_lower_bounded_egyptian_fraction(q: Rat, bound: Nat) -> Bool {
+    exists(denominators: List[Nat]) {
+        egyptian_denominator_list(denominators) and
+        denominator_list_lower_bound(bound, denominators) and
+        q = unit_fraction_sum(denominators)
+    }
+}
+
 /// True if a denominator gives a unit-fraction subtraction step for `q`.
 define unit_fraction_greedy_step(q: Rat, n: Nat) -> Bool {
     Nat.0 < n and unit_fraction(n) < q and q - unit_fraction(n) < q
@@ -1511,6 +2057,22 @@ define unit_fraction_remainder_raw_denom(q: Rat, n: Nat) -> Int {
     q.denom * Int.from_nat(n)
 }
 
+/// The natural measure of a rational used by the greedy-step descent.
+define unit_fraction_num_measure(q: Rat) -> Nat {
+    abs(q.num)
+}
+
+/// The natural measure of the unreduced remainder numerator.
+define unit_fraction_remainder_raw_num_measure(q: Rat, n: Nat) -> Nat {
+    abs(unit_fraction_remainder_raw_num(q, n))
+}
+
+/// True when the raw numerator of the remainder is a positive strict descent.
+define unit_fraction_raw_num_descends(q: Rat, n: Nat) -> Bool {
+    unit_fraction_remainder_raw_num(q, n).is_positive and
+        unit_fraction_remainder_raw_num(q, n) < q.num
+}
+
 /// A positive denominator gives a positive unit fraction.
 theorem unit_fraction_positive(n: Nat) {
     Nat.0 < n implies unit_fraction(n).is_positive
@@ -1526,9 +2088,19 @@ theorem unit_fraction_eq_one_div(n: Nat) {
     Nat.0 < n implies unit_fraction(n) = Rat.1 / Rat.from_nat(n)
 }
 
+/// A positive unit fraction is the reduced fraction `1/n`.
+theorem unit_fraction_eq_reduce(n: Nat) {
+    Nat.0 < n implies unit_fraction(n) = reduce(Int.1, Int.from_nat(n))
+}
+
 /// The first unit fraction is one.
 theorem unit_fraction_one {
     unit_fraction(Nat.1) = Rat.1
+}
+
+/// The zero denominator gives the zero rational.
+theorem unit_fraction_zero {
+    unit_fraction(Nat.0) = Rat.0
 }
 
 /// Multiplying a positive unit fraction by its denominator gives one.
@@ -1544,6 +2116,11 @@ theorem unit_fraction_to_real(n: Nat) {
 /// Unit fractions are antitone in positive denominators.
 theorem unit_fraction_lte_of_lte(m: Nat, n: Nat) {
     Nat.0 < m and m <= n implies unit_fraction(n) <= unit_fraction(m)
+}
+
+/// The previous unit fraction is bounded by twice the current unit fraction.
+theorem unit_fraction_pred_lte_double(n: Nat) {
+    Nat.1 < n implies unit_fraction(n - Nat.1) <= unit_fraction(n) + unit_fraction(n)
 }
 
 /// A positive rational below one has a unit-fraction subtraction step.
@@ -1584,6 +2161,26 @@ theorem unit_fraction_bounded_denominator_lte(q: Rat, n: Nat) {
 theorem unit_fraction_bounded_denominator_raw_num_nonnegative(q: Rat, n: Nat) {
     unit_fraction_bounded_denominator(q, n) implies
         Int.0 <= unit_fraction_remainder_raw_num(q, n)
+}
+
+/// The remainder after subtracting `1/n` is the raw fraction reduced.
+theorem unit_fraction_remainder_eq_raw(q: Rat, n: Nat) {
+    Nat.0 < n implies
+        q - unit_fraction(n) =
+            reduce(unit_fraction_remainder_raw_num(q, n),
+                unit_fraction_remainder_raw_denom(q, n))
+}
+
+/// The zero raw numerator is exactly a zero reduced remainder.
+theorem unit_fraction_remainder_zero_of_raw_num_zero(q: Rat, n: Nat) {
+    Nat.0 < n and unit_fraction_remainder_raw_num(q, n) = Int.0 implies
+        q - unit_fraction(n) = Rat.0
+}
+
+/// A positive bounded-step remainder has positive raw numerator.
+theorem unit_fraction_bounded_step_raw_num_positive(q: Rat, n: Nat) {
+    unit_fraction_bounded_step(q, n) implies
+        unit_fraction_remainder_raw_num(q, n).is_positive
 }
 
 /// Every positive rational has a bounded unit-fraction denominator.
@@ -1643,6 +2240,75 @@ theorem unit_fraction_ceiling_step_gt_one_of_lt_one(q: Rat, n: Nat) {
 theorem unit_fraction_ceiling_step_raw_num_lt_num(q: Rat, n: Nat) {
     q < Rat.1 and unit_fraction_ceiling_step(q, n)
         implies unit_fraction_remainder_raw_num(q, n) < q.num
+}
+
+/// A positive canonical remainder below one has a smaller reduced numerator.
+theorem unit_fraction_ceiling_step_positive_remainder_num_lt_num(q: Rat, n: Nat) {
+    q < Rat.1 and unit_fraction_ceiling_step(q, n) and
+        (q - unit_fraction(n)).is_positive
+        implies (q - unit_fraction(n)).num < q.num
+}
+
+/// A nonterminal canonical ceiling step below one has a smaller reduced numerator.
+theorem unit_fraction_ceiling_step_remainder_num_lt_num(q: Rat, n: Nat) {
+    q < Rat.1 and unit_fraction_ceiling_step(q, n) and q != unit_fraction(n)
+        implies (q - unit_fraction(n)).num < q.num
+}
+
+/// A nonterminal canonical ceiling step leaves a positive remainder.
+theorem unit_fraction_ceiling_step_remainder_positive(q: Rat, n: Nat) {
+    unit_fraction_ceiling_step(q, n) and q != unit_fraction(n)
+        implies (q - unit_fraction(n)).is_positive
+}
+
+/// A nonterminal canonical ceiling step leaves a smaller remainder.
+theorem unit_fraction_ceiling_step_remainder_lt_self(q: Rat, n: Nat) {
+    unit_fraction_ceiling_step(q, n) and q != unit_fraction(n)
+        implies q - unit_fraction(n) < q
+}
+
+/// A nonterminal canonical ceiling step below one leaves a remainder below one.
+theorem unit_fraction_ceiling_step_remainder_lt_one(q: Rat, n: Nat) {
+    q < Rat.1 and unit_fraction_ceiling_step(q, n) and q != unit_fraction(n)
+        implies q - unit_fraction(n) < Rat.1
+}
+
+/// A canonical ceiling step below one leaves a remainder below the chosen unit
+/// fraction.
+theorem unit_fraction_ceiling_step_remainder_lt_unit(q: Rat, n: Nat) {
+    q < Rat.1 and unit_fraction_ceiling_step(q, n)
+        implies q - unit_fraction(n) < unit_fraction(n)
+}
+
+/// The next canonical greedy denominator after a canonical step is larger.
+theorem unit_fraction_ceiling_step_next_denominator_gt(q: Rat, n: Nat, m: Nat) {
+    q < Rat.1 and unit_fraction_ceiling_step(q, n) and
+        unit_fraction_ceiling_step(q - unit_fraction(n), m)
+        implies n < m
+}
+
+/// The next canonical greedy denominator is lower-bounded by the successor of
+/// the current denominator.
+theorem unit_fraction_ceiling_step_next_denominator_lower_bound(q: Rat, n: Nat,
+    m: Nat) {
+    q < Rat.1 and unit_fraction_ceiling_step(q, n) and
+        unit_fraction_ceiling_step(q - unit_fraction(n), m)
+        implies n.suc <= m
+}
+
+/// A canonical bounded step below one gives strict descent of the raw numerator.
+theorem unit_fraction_ceiling_step_raw_num_descends(q: Rat, n: Nat) {
+    q.is_positive and q < Rat.1 and unit_fraction_ceiling_step(q, n) and
+        unit_fraction_bounded_step(q, n)
+        implies unit_fraction_raw_num_descends(q, n)
+}
+
+/// A canonical bounded step below one strictly decreases the natural numerator measure.
+theorem unit_fraction_ceiling_step_raw_num_measure_lt(q: Rat, n: Nat) {
+    q.is_positive and q < Rat.1 and unit_fraction_ceiling_step(q, n) and
+        unit_fraction_bounded_step(q, n)
+        implies unit_fraction_remainder_raw_num_measure(q, n) <
+            unit_fraction_num_measure(q)
 }
 
 /// The empty unit-fraction sum is zero.
@@ -1756,6 +2422,27 @@ theorem denominator_list_lower_bound_tail(bound: Nat, n: Nat, denominators: List
         implies denominator_list_lower_bound(bound, denominators)
 }
 
+/// A smaller lower bound is also a lower bound for the same denominators.
+theorem denominator_list_lower_bound_monotone(bound: Nat, smaller: Nat,
+    denominators: List[Nat]) {
+    denominator_list_lower_bound(bound, denominators) and smaller <= bound
+        implies denominator_list_lower_bound(smaller, denominators)
+}
+
+/// A tail bounded below by `n.suc` is also bounded below by `n`.
+theorem denominator_list_lower_bound_suc_imp_lower_bound(n: Nat,
+    denominators: List[Nat]) {
+    denominator_list_lower_bound(n.suc, denominators)
+        implies denominator_list_lower_bound(n, denominators)
+}
+
+/// Consing `n` onto a tail bounded below by `n.suc` preserves lower bound `n`.
+theorem denominator_list_lower_bound_cons_self_of_suc(n: Nat,
+    denominators: List[Nat]) {
+    denominator_list_lower_bound(n.suc, denominators)
+        implies denominator_list_lower_bound(n, List.cons(n, denominators))
+}
+
 /// Positive denominator lists have lower bound one.
 theorem positive_denominator_list_lower_bound_one(denominators: List[Nat]) {
     positive_denominator_list(denominators) implies
@@ -1765,6 +2452,13 @@ theorem positive_denominator_list_lower_bound_one(denominators: List[Nat]) {
 /// Every member of a positive denominator list is positive.
 theorem positive_denominator_list_contains_positive(denominators: List[Nat], n: Nat) {
     positive_denominator_list(denominators) and denominators.contains(n) implies Nat.0 < n
+}
+
+/// A lower bound above `n` makes `n` fresh for the denominator list.
+theorem denominator_list_lower_bound_suc_not_contains(n: Nat,
+    denominators: List[Nat]) {
+    denominator_list_lower_bound(n.suc, denominators)
+        implies not denominators.contains(n)
 }
 
 /// A nonempty upper-bounded denominator list has an upper-bounded head.
@@ -1814,6 +2508,17 @@ theorem egyptian_denominator_list_nil {
     egyptian_denominator_list(List.nil[Nat])
 }
 
+/// An Egyptian denominator list has unique denominators.
+theorem egyptian_denominator_list_unique(denominators: List[Nat]) {
+    egyptian_denominator_list(denominators) implies denominators.is_unique
+}
+
+/// An Egyptian denominator list has positive denominators.
+theorem egyptian_denominator_list_positive(denominators: List[Nat]) {
+    egyptian_denominator_list(denominators) implies
+        positive_denominator_list(denominators)
+}
+
 /// A positive singleton denominator is a distinct positive denominator list.
 theorem egyptian_denominator_list_singleton(n: Nat) {
     Nat.0 < n implies egyptian_denominator_list(List.singleton(n))
@@ -1838,6 +2543,40 @@ theorem is_egyptian_fraction_zero {
     is_egyptian_fraction(Rat.0)
 }
 
+/// A lower-bounded Egyptian fraction is an Egyptian fraction.
+theorem is_egyptian_fraction_with_lower_bound_imp_egyptian(q: Rat, bound: Nat) {
+    is_egyptian_fraction_with_lower_bound(q, bound) implies is_egyptian_fraction(q)
+}
+
+/// Zero is represented by the empty sum with any denominator lower bound.
+theorem is_egyptian_fraction_with_lower_bound_zero(bound: Nat) {
+    is_egyptian_fraction_with_lower_bound(Rat.0, bound)
+}
+
+/// A unit-fraction sum over Egyptian denominators is an Egyptian fraction.
+theorem unit_fraction_sum_is_egyptian(denominators: List[Nat]) {
+    egyptian_denominator_list(denominators)
+        implies is_egyptian_fraction(unit_fraction_sum(denominators))
+}
+
+/// A unit-fraction sum over lower-bounded Egyptian denominators is a
+/// lower-bounded Egyptian fraction.
+theorem unit_fraction_sum_is_egyptian_with_lower_bound(denominators: List[Nat],
+    bound: Nat) {
+    egyptian_denominator_list(denominators) and
+        denominator_list_lower_bound(bound, denominators)
+        implies is_egyptian_fraction_with_lower_bound(unit_fraction_sum(denominators),
+            bound)
+}
+
+/// A smaller denominator lower bound preserves a lower-bounded Egyptian
+/// representation.
+theorem is_egyptian_fraction_with_lower_bound_monotone(q: Rat, bound: Nat,
+    smaller: Nat) {
+    is_egyptian_fraction_with_lower_bound(q, bound) and smaller <= bound
+        implies is_egyptian_fraction_with_lower_bound(q, smaller)
+}
+
 /// True when two Egyptian representations may be added by appending their
 /// disjoint denominator lists.
 define egyptian_fraction_add_disjoint_hyp(q: Rat, r: Rat, left: List[Nat],
@@ -1852,12 +2591,48 @@ theorem egyptian_fraction_add_disjoint(q: Rat, r: Rat, left: List[Nat], right: L
     egyptian_fraction_add_disjoint_hyp(q, r, left, right) implies is_egyptian_fraction(q + r)
 }
 
+/// Adding two disjoint lower-bounded Egyptian representations gives a
+/// lower-bounded Egyptian fraction.
+theorem egyptian_fraction_add_disjoint_lower_bound(q: Rat, r: Rat, bound: Nat,
+    left: List[Nat], right: List[Nat]) {
+    egyptian_denominator_list(left) and egyptian_denominator_list(right) and
+        (forall(n: Nat) { not (left.contains(n) and right.contains(n)) }) and
+        denominator_list_lower_bound(bound, left) and
+        denominator_list_lower_bound(bound, right) and
+        q = unit_fraction_sum(left) and r = unit_fraction_sum(right)
+        implies is_egyptian_fraction_with_lower_bound(q + r, bound)
+}
+
 /// Adding a fresh positive denominator to an Egyptian representation gives an
 /// Egyptian fraction.
 theorem egyptian_fraction_add_fresh_unit(q: Rat, n: Nat, denominators: List[Nat]) {
     Nat.0 < n and egyptian_denominator_list(denominators) and
         not denominators.contains(n) and q = unit_fraction_sum(denominators)
         implies is_egyptian_fraction(unit_fraction(n) + q)
+}
+
+/// Adding a denominator below a represented lower-bound tail is fresh.
+theorem egyptian_fraction_add_lower_bound_unit(q: Rat, n: Nat,
+    denominators: List[Nat]) {
+    Nat.0 < n and egyptian_denominator_list(denominators) and
+        denominator_list_lower_bound(n.suc, denominators) and
+        q = unit_fraction_sum(denominators)
+        implies is_egyptian_fraction(unit_fraction(n) + q)
+}
+
+/// Adding a denominator below a represented lower-bound tail preserves a
+/// lower-bounded Egyptian representation at the current denominator.
+theorem lower_bounded_egyptian_fraction_add_lower_bound_unit(q: Rat, n: Nat,
+    denominators: List[Nat]) {
+    Nat.0 < n and egyptian_denominator_list(denominators) and
+        denominator_list_lower_bound(n.suc, denominators) and
+        q = unit_fraction_sum(denominators)
+        implies is_lower_bounded_egyptian_fraction(unit_fraction(n) + q, n)
+}
+
+/// A lower-bounded Egyptian representation is in particular Egyptian.
+theorem lower_bounded_egyptian_fraction_is_egyptian(q: Rat, bound: Nat) {
+    is_lower_bounded_egyptian_fraction(q, bound) implies is_egyptian_fraction(q)
 }
 
 /// A fresh Egyptian representation of a bounded-step remainder represents the
@@ -1871,9 +2646,71 @@ theorem egyptian_fraction_of_bounded_step_remainder(q: Rat, n: Nat,
         implies is_egyptian_fraction(q)
 }
 
+/// A lower-bounded Egyptian representation of a unit-fraction remainder
+/// represents the original rational.
+theorem egyptian_fraction_of_lower_bound_remainder(q: Rat, n: Nat,
+    denominators: List[Nat]) {
+    Nat.0 < n and egyptian_denominator_list(denominators) and
+        denominator_list_lower_bound(n.suc, denominators) and
+        q - unit_fraction(n) = unit_fraction_sum(denominators)
+        implies is_egyptian_fraction(q)
+}
+
 /// Every positive unit fraction is an Egyptian fraction.
 theorem unit_fraction_is_egyptian(n: Nat) {
     Nat.0 < n implies is_egyptian_fraction(unit_fraction(n))
+}
+
+/// A positive unit fraction has a lower-bounded Egyptian representation
+/// whenever its denominator is above the bound.
+theorem unit_fraction_is_egyptian_with_lower_bound(n: Nat, bound: Nat) {
+    Nat.0 < n and bound <= n
+        implies is_egyptian_fraction_with_lower_bound(unit_fraction(n), bound)
+}
+
+/// A lower-bounded Egyptian representation of a remainder extends to a
+/// lower-bounded representation of the original rational.
+theorem egyptian_fraction_with_lower_bound_of_lower_bound_remainder(q: Rat,
+    n: Nat, denominators: List[Nat]) {
+    Nat.0 < n and egyptian_denominator_list(denominators) and
+        denominator_list_lower_bound(n.suc, denominators) and
+        q - unit_fraction(n) = unit_fraction_sum(denominators)
+        implies is_egyptian_fraction_with_lower_bound(q, n)
+}
+
+/// A lower-bounded Egyptian representation of a remainder extends to a
+/// lower-bounded representation of the original rational.
+theorem egyptian_fraction_with_lower_bound_of_remainder(q: Rat, n: Nat) {
+    Nat.0 < n and
+        is_egyptian_fraction_with_lower_bound(q - unit_fraction(n), n.suc)
+        implies is_egyptian_fraction_with_lower_bound(q, n)
+}
+
+/// A positive rational below a unit fraction has a lower-bounded Egyptian
+/// representation, with the numerator measure supplied explicitly.
+theorem positive_lt_unit_fraction_is_egyptian_with_lower_bound_of_num(q: Rat,
+    prev: Nat, k: Nat) {
+    q.is_positive and q < unit_fraction(prev) and q.num = Int.from_nat(k.suc)
+        implies is_egyptian_fraction_with_lower_bound(q, prev.suc)
+}
+
+/// A positive rational below a unit fraction has an Egyptian representation
+/// whose denominators are all above the predecessor denominator.
+theorem positive_lt_unit_fraction_is_egyptian_with_lower_bound(q: Rat, prev: Nat) {
+    q.is_positive and q < unit_fraction(prev)
+        implies is_egyptian_fraction_with_lower_bound(q, prev.suc)
+}
+
+/// A positive rational below one has an Egyptian representation whose
+/// denominators are at least two.
+theorem positive_lt_one_is_egyptian_with_lower_bound_two(q: Rat) {
+    q.is_positive and q < Rat.1
+        implies is_egyptian_fraction_with_lower_bound(q, Nat.2)
+}
+
+/// A positive rational below one is an Egyptian fraction.
+theorem positive_lt_one_is_egyptian(q: Rat) {
+    q.is_positive and q < Rat.1 implies is_egyptian_fraction(q)
 }
 
 
@@ -1883,4 +2720,715 @@ define is_sum_four_squares(n: Nat) -> Bool {
     exists(a: Nat, b: Nat, c: Nat, d: Nat) {
         n = a * a + b * b + c * c + d * d
     }
+}
+
+
+// continued_fraction.ac
+/// True if every coefficient in a continued-fraction tail is positive.
+define positive_continued_fraction_tail(coefficients: List[Nat]) -> Bool {
+    match coefficients {
+        List.nil {
+            true
+        }
+        List.cons(head, tail) {
+            Nat.0 < head and positive_continued_fraction_tail(tail)
+        }
+    }
+}
+
+/// True if the coefficients form a finite simple continued fraction.
+define finite_continued_fraction_coefficients(coefficients: List[Nat]) -> Bool {
+    match coefficients {
+        List.nil {
+            false
+        }
+        List.cons(head, tail) {
+            positive_continued_fraction_tail(tail)
+        }
+    }
+}
+
+/// A finite simple continued fraction.
+structure ContinuedFraction {
+    /// The coefficients of the continued fraction.
+    coefficients: List[Nat]
+} constraint {
+    finite_continued_fraction_coefficients(coefficients)
+}
+
+/// The rational value of a finite simple continued fraction.
+define continued_fraction_value(coefficients: List[Nat]) -> Rat {
+    match coefficients {
+        List.nil {
+            Rat.0
+        }
+        List.cons(head, tail) {
+            Rat.from_nat(head) + continued_fraction_value(tail).inverse
+        }
+    }
+}
+
+/// The forward recurrence state for a finite continuant.
+define continuant_state(coefficients: List[Nat], previous: Nat, current: Nat) -> Nat {
+    match coefficients {
+        List.nil {
+            current
+        }
+        List.cons(head, tail) {
+            continuant_state(tail, current, current * head + previous)
+        }
+    }
+}
+
+/// The continuant associated to a finite coefficient list.
+define continuant(coefficients: List[Nat]) -> Nat {
+    continuant_state(coefficients, Nat.0, Nat.1)
+}
+
+/// The numerator of the finite continued-fraction convergent.
+define continued_fraction_numerator(coefficients: List[Nat]) -> Nat {
+    match coefficients {
+        List.nil {
+            Nat.0
+        }
+        List.cons(head, tail) {
+            continuant(coefficients)
+        }
+    }
+}
+
+/// The denominator of the finite continued-fraction convergent.
+define continued_fraction_denominator(coefficients: List[Nat]) -> Nat {
+    match coefficients {
+        List.nil {
+            Nat.1
+        }
+        List.cons(head, tail) {
+            continuant(tail)
+        }
+    }
+}
+
+/// The numerator-denominator recurrence state for finite convergents.
+define continued_fraction_convergent_state(coefficients: List[Nat],
+    previous_numerator: Nat, current_numerator: Nat,
+    previous_denominator: Nat, current_denominator: Nat) -> Pair[Nat, Nat] {
+    match coefficients {
+        List.nil {
+            Pair.new(current_numerator, current_denominator)
+        }
+        List.cons(head, tail) {
+            continued_fraction_convergent_state(tail,
+                current_numerator,
+                current_numerator * head + previous_numerator,
+                current_denominator,
+                current_denominator * head + previous_denominator)
+        }
+    }
+}
+
+/// The numerator-denominator pair for a finite continued fraction.
+define continued_fraction_convergent(coefficients: List[Nat]) -> Pair[Nat, Nat] {
+    match coefficients {
+        List.nil {
+            Pair.new(Nat.0, Nat.1)
+        }
+        List.cons(head, tail) {
+            continued_fraction_convergent_state(coefficients, Nat.0, Nat.1, Nat.1, Nat.0)
+        }
+    }
+}
+
+/// The empty tail is positive.
+theorem positive_continued_fraction_tail_nil {
+    positive_continued_fraction_tail(List.nil[Nat])
+}
+
+/// The head of a positive continued-fraction tail is positive.
+theorem positive_continued_fraction_tail_cons_head(head: Nat, tail: List[Nat]) {
+    positive_continued_fraction_tail(List.cons(head, tail)) implies Nat.0 < head
+}
+
+/// The tail of a positive continued-fraction tail is positive.
+theorem positive_continued_fraction_tail_cons_tail(head: Nat, tail: List[Nat]) {
+    positive_continued_fraction_tail(List.cons(head, tail))
+        implies positive_continued_fraction_tail(tail)
+}
+
+/// Consing a positive coefficient onto a positive tail gives a positive tail.
+theorem positive_continued_fraction_tail_cons_intro(head: Nat, tail: List[Nat]) {
+    Nat.0 < head and positive_continued_fraction_tail(tail)
+        implies positive_continued_fraction_tail(List.cons(head, tail))
+}
+
+/// A singleton tail is positive exactly when its coefficient is positive.
+theorem positive_continued_fraction_tail_singleton_intro(head: Nat) {
+    Nat.0 < head implies positive_continued_fraction_tail(List.cons(head, List.nil[Nat]))
+}
+
+/// The coefficient in a positive singleton tail is positive.
+theorem positive_continued_fraction_tail_singleton_positive(head: Nat) {
+    positive_continued_fraction_tail(List.cons(head, List.nil[Nat])) implies Nat.0 < head
+}
+
+/// A two-element tail is positive when both coefficients are positive.
+theorem positive_continued_fraction_tail_pair_intro(head: Nat, next: Nat) {
+    Nat.0 < head and Nat.0 < next
+        implies positive_continued_fraction_tail(List.cons(head, List.cons(next, List.nil[Nat])))
+}
+
+/// A singleton list of coefficients is a finite simple continued fraction.
+theorem finite_continued_fraction_coefficients_singleton(head: Nat) {
+    finite_continued_fraction_coefficients(List.cons(head, List.nil[Nat]))
+}
+
+/// The continued fraction with one coefficient.
+let continued_fraction_singleton(head: Nat) -> cf: ContinuedFraction satisfy {
+    ContinuedFraction.new(List.cons(head, List.nil[Nat])) = Option.some(cf)
+}
+
+attributes ContinuedFraction {
+    /// The continued fraction with one coefficient.
+    let singleton = continued_fraction_singleton
+
+    /// The rational value of the continued fraction.
+    define value(self) -> Rat {
+        continued_fraction_value(self.coefficients)
+    }
+
+    /// The continuant associated to the continued fraction.
+    define continuant(self) -> Nat {
+        continuant(self.coefficients)
+    }
+
+    /// The numerator of the finite convergent.
+    define numerator(self) -> Nat {
+        continued_fraction_numerator(self.coefficients)
+    }
+
+    /// The denominator of the finite convergent.
+    define denominator(self) -> Nat {
+        continued_fraction_denominator(self.coefficients)
+    }
+
+    /// The numerator-denominator pair of the finite convergent.
+    define convergent(self) -> Pair[Nat, Nat] {
+        continued_fraction_convergent(self.coefficients)
+    }
+}
+
+/// A continued fraction has valid coefficients.
+theorem continued_fraction_coefficients_valid(cf: ContinuedFraction) {
+    finite_continued_fraction_coefficients(cf.coefficients)
+}
+
+/// Rebuilding a continued fraction from its coefficients gives the original fraction.
+theorem continued_fraction_new_self(cf: ContinuedFraction) {
+    ContinuedFraction.new(cf.coefficients) = Option.some(cf)
+}
+
+/// The value method is the coefficient-list value.
+theorem continued_fraction_value_eq_coefficients_value(cf: ContinuedFraction) {
+    cf.value = continued_fraction_value(cf.coefficients)
+}
+
+/// The continuant method is the coefficient-list continuant.
+theorem continued_fraction_continuant_eq_coefficients_continuant(cf: ContinuedFraction) {
+    cf.continuant = continuant(cf.coefficients)
+}
+
+/// The numerator method is the coefficient-list numerator.
+theorem continued_fraction_numerator_eq_coefficients_numerator(cf: ContinuedFraction) {
+    cf.numerator = continued_fraction_numerator(cf.coefficients)
+}
+
+/// The denominator method is the coefficient-list denominator.
+theorem continued_fraction_denominator_eq_coefficients_denominator(cf: ContinuedFraction) {
+    cf.denominator = continued_fraction_denominator(cf.coefficients)
+}
+
+/// The convergent method is the coefficient-list convergent.
+theorem continued_fraction_convergent_eq_coefficients_convergent(cf: ContinuedFraction) {
+    cf.convergent = continued_fraction_convergent(cf.coefficients)
+}
+
+/// The singleton constructor has the expected coefficient list.
+theorem continued_fraction_singleton_coefficients(head: Nat) {
+    ContinuedFraction.singleton(head).coefficients = List.cons(head, List.nil[Nat])
+}
+
+/// Coefficient validity unfolds over a nonempty list.
+theorem finite_continued_fraction_coefficients_cons(head: Nat, tail: List[Nat]) {
+    finite_continued_fraction_coefficients(List.cons(head, tail)) =
+        positive_continued_fraction_tail(tail)
+}
+
+/// A valid nonempty coefficient list has a positive tail.
+theorem finite_continued_fraction_coefficients_cons_tail(head: Nat, tail: List[Nat]) {
+    finite_continued_fraction_coefficients(List.cons(head, tail))
+        implies positive_continued_fraction_tail(tail)
+}
+
+/// A positive tail gives a valid nonempty coefficient list.
+theorem finite_continued_fraction_coefficients_cons_intro(head: Nat, tail: List[Nat]) {
+    positive_continued_fraction_tail(tail)
+        implies finite_continued_fraction_coefficients(List.cons(head, tail))
+}
+
+/// A two-term list with a positive second coefficient is valid.
+theorem finite_continued_fraction_coefficients_pair_intro(head: Nat, next: Nat) {
+    Nat.0 < next implies
+        finite_continued_fraction_coefficients(List.cons(head, List.cons(next, List.nil[Nat])))
+}
+
+/// A valid two-term list has a positive second coefficient.
+theorem finite_continued_fraction_coefficients_pair_tail_positive(head: Nat, next: Nat) {
+    finite_continued_fraction_coefficients(List.cons(head, List.cons(next, List.nil[Nat])))
+        implies Nat.0 < next
+}
+
+/// A three-term list with positive tail coefficients is valid.
+theorem finite_continued_fraction_coefficients_triple_intro(head: Nat, next: Nat,
+    third: Nat) {
+    Nat.0 < next and Nat.0 < third implies
+        finite_continued_fraction_coefficients(
+            List.cons(head, List.cons(next, List.cons(third, List.nil[Nat]))))
+}
+
+/// A valid three-term coefficient list has a positive second coefficient.
+theorem finite_continued_fraction_coefficients_triple_second_positive(head: Nat,
+    next: Nat, third: Nat) {
+    finite_continued_fraction_coefficients(
+        List.cons(head, List.cons(next, List.cons(third, List.nil[Nat]))))
+        implies Nat.0 < next
+}
+
+/// A valid three-term coefficient list has a positive third coefficient.
+theorem finite_continued_fraction_coefficients_triple_third_positive(head: Nat,
+    next: Nat, third: Nat) {
+    finite_continued_fraction_coefficients(
+        List.cons(head, List.cons(next, List.cons(third, List.nil[Nat]))))
+        implies Nat.0 < third
+}
+
+/// The empty coefficient list has value zero.
+theorem continued_fraction_value_nil {
+    continued_fraction_value(List.nil[Nat]) = Rat.0
+}
+
+/// The value of a nonempty list unfolds by adding the reciprocal of the tail.
+theorem continued_fraction_value_cons(head: Nat, tail: List[Nat]) {
+    continued_fraction_value(List.cons(head, tail)) =
+        Rat.from_nat(head) + continued_fraction_value(tail).inverse
+}
+
+/// A singleton continued fraction has the value of its single coefficient.
+theorem continued_fraction_value_singleton(head: Nat) {
+    continued_fraction_value(List.cons(head, List.nil[Nat])) = Rat.from_nat(head)
+}
+
+/// A singleton continued fraction has the value of its single coefficient.
+theorem continued_fraction_singleton_value(head: Nat) {
+    ContinuedFraction.singleton(head).value = Rat.from_nat(head)
+}
+
+/// The continuant of the empty list is one.
+theorem continuant_nil {
+    continuant(List.nil[Nat]) = Nat.1
+}
+
+/// The empty state returns the current continuant.
+theorem continuant_state_nil(previous: Nat, current: Nat) {
+    continuant_state(List.nil[Nat], previous, current) = current
+}
+
+/// A nonempty state advances the continuant recurrence by one coefficient.
+theorem continuant_state_cons(head: Nat, tail: List[Nat], previous: Nat, current: Nat) {
+    continuant_state(List.cons(head, tail), previous, current) =
+        continuant_state(tail, current, current * head + previous)
+}
+
+/// The continuant of a singleton list is its single coefficient.
+theorem continuant_singleton(head: Nat) {
+    continuant(List.cons(head, List.nil[Nat])) = head
+}
+
+/// A singleton continued fraction has continuant equal to its coefficient.
+theorem continued_fraction_singleton_continuant(head: Nat) {
+    ContinuedFraction.singleton(head).continuant = head
+}
+
+/// The continuant of a two-element list is `head * next + 1`.
+theorem continuant_pair(head: Nat, next: Nat) {
+    continuant(List.cons(head, List.cons(next, List.nil[Nat]))) =
+        head * next + Nat.1
+}
+
+/// The continuant of a three-element list follows the third recurrence step.
+theorem continuant_triple(head: Nat, next: Nat, third: Nat) {
+    continuant(List.cons(head, List.cons(next, List.cons(third, List.nil[Nat])))) =
+        (head * next + Nat.1) * third + head
+}
+
+/// The empty continued fraction has numerator zero.
+theorem continued_fraction_numerator_nil {
+    continued_fraction_numerator(List.nil[Nat]) = Nat.0
+}
+
+/// A singleton continued fraction has numerator equal to its coefficient.
+theorem continued_fraction_numerator_singleton(head: Nat) {
+    continued_fraction_numerator(List.cons(head, List.nil[Nat])) = head
+}
+
+/// A singleton continued fraction has numerator equal to its coefficient.
+theorem continued_fraction_singleton_numerator(head: Nat) {
+    ContinuedFraction.singleton(head).numerator = head
+}
+
+/// A two-term continued fraction has numerator `head * next + 1`.
+theorem continued_fraction_numerator_pair(head: Nat, next: Nat) {
+    continued_fraction_numerator(List.cons(head, List.cons(next, List.nil[Nat]))) =
+        head * next + Nat.1
+}
+
+/// A three-term continued fraction has numerator given by the third continuant.
+theorem continued_fraction_numerator_triple(head: Nat, next: Nat, third: Nat) {
+    continued_fraction_numerator(
+        List.cons(head, List.cons(next, List.cons(third, List.nil[Nat])))) =
+        (head * next + Nat.1) * third + head
+}
+
+/// The empty continued fraction has denominator one.
+theorem continued_fraction_denominator_nil {
+    continued_fraction_denominator(List.nil[Nat]) = Nat.1
+}
+
+/// The empty convergent is the conventional pair `0/1`.
+theorem continued_fraction_convergent_nil {
+    continued_fraction_convergent(List.nil[Nat]) = Pair.new(Nat.0, Nat.1)
+}
+
+/// The empty convergent has numerator zero.
+theorem continued_fraction_convergent_nil_first {
+    continued_fraction_convergent(List.nil[Nat]).first = Nat.0
+}
+
+/// The empty convergent has denominator one.
+theorem continued_fraction_convergent_nil_second {
+    continued_fraction_convergent(List.nil[Nat]).second = Nat.1
+}
+
+/// The empty convergent has positive denominator.
+theorem continued_fraction_convergent_nil_second_positive {
+    Nat.0 < continued_fraction_convergent(List.nil[Nat]).second
+}
+
+/// The empty convergent first projection matches the numerator definition.
+theorem continued_fraction_convergent_nil_first_eq_numerator {
+    continued_fraction_convergent(List.nil[Nat]).first =
+        continued_fraction_numerator(List.nil[Nat])
+}
+
+/// The empty convergent second projection matches the denominator definition.
+theorem continued_fraction_convergent_nil_second_eq_denominator {
+    continued_fraction_convergent(List.nil[Nat]).second =
+        continued_fraction_denominator(List.nil[Nat])
+}
+
+/// The empty convergent state returns the current numerator and denominator.
+theorem continued_fraction_convergent_state_nil(previous_numerator: Nat,
+    current_numerator: Nat, previous_denominator: Nat, current_denominator: Nat) {
+    continued_fraction_convergent_state(List.nil[Nat], previous_numerator,
+        current_numerator, previous_denominator, current_denominator) =
+        Pair.new(current_numerator, current_denominator)
+}
+
+/// The first projection of an empty convergent state is the current numerator.
+theorem continued_fraction_convergent_state_nil_first(previous_numerator: Nat,
+    current_numerator: Nat, previous_denominator: Nat, current_denominator: Nat) {
+    continued_fraction_convergent_state(List.nil[Nat], previous_numerator,
+        current_numerator, previous_denominator, current_denominator).first =
+        current_numerator
+}
+
+/// The second projection of an empty convergent state is the current denominator.
+theorem continued_fraction_convergent_state_nil_second(previous_numerator: Nat,
+    current_numerator: Nat, previous_denominator: Nat, current_denominator: Nat) {
+    continued_fraction_convergent_state(List.nil[Nat], previous_numerator,
+        current_numerator, previous_denominator, current_denominator).second =
+        current_denominator
+}
+
+/// A nonempty convergent state advances both numerator and denominator recurrences.
+theorem continued_fraction_convergent_state_cons(head: Nat, tail: List[Nat],
+    previous_numerator: Nat, current_numerator: Nat,
+    previous_denominator: Nat, current_denominator: Nat) {
+    continued_fraction_convergent_state(List.cons(head, tail), previous_numerator,
+        current_numerator, previous_denominator, current_denominator) =
+        continued_fraction_convergent_state(tail,
+            current_numerator,
+            current_numerator * head + previous_numerator,
+            current_denominator,
+            current_denominator * head + previous_denominator)
+}
+
+/// The first projection of a nonempty state follows the numerator recurrence.
+theorem continued_fraction_convergent_state_cons_first(head: Nat, tail: List[Nat],
+    previous_numerator: Nat, current_numerator: Nat,
+    previous_denominator: Nat, current_denominator: Nat) {
+    continued_fraction_convergent_state(List.cons(head, tail), previous_numerator,
+        current_numerator, previous_denominator, current_denominator).first =
+        continued_fraction_convergent_state(tail,
+            current_numerator,
+            current_numerator * head + previous_numerator,
+            current_denominator,
+            current_denominator * head + previous_denominator).first
+}
+
+/// The second projection of a nonempty state follows the denominator recurrence.
+theorem continued_fraction_convergent_state_cons_second(head: Nat, tail: List[Nat],
+    previous_numerator: Nat, current_numerator: Nat,
+    previous_denominator: Nat, current_denominator: Nat) {
+    continued_fraction_convergent_state(List.cons(head, tail), previous_numerator,
+        current_numerator, previous_denominator, current_denominator).second =
+        continued_fraction_convergent_state(tail,
+            current_numerator,
+            current_numerator * head + previous_numerator,
+            current_denominator,
+            current_denominator * head + previous_denominator).second
+}
+
+/// The singleton convergent has numerator equal to its coefficient.
+theorem continued_fraction_convergent_singleton_first(head: Nat) {
+    continued_fraction_convergent(List.cons(head, List.nil[Nat])).first = head
+}
+
+/// The singleton convergent has denominator one.
+theorem continued_fraction_convergent_singleton_second(head: Nat) {
+    continued_fraction_convergent(List.cons(head, List.nil[Nat])).second = Nat.1
+}
+
+/// A singleton continued fraction has denominator one.
+theorem continued_fraction_denominator_singleton(head: Nat) {
+    continued_fraction_denominator(List.cons(head, List.nil[Nat])) = Nat.1
+}
+
+/// A singleton continued fraction has denominator one.
+theorem continued_fraction_singleton_denominator(head: Nat) {
+    ContinuedFraction.singleton(head).denominator = Nat.1
+}
+
+/// The singleton convergent first projection matches the numerator definition.
+theorem continued_fraction_convergent_singleton_first_eq_numerator(head: Nat) {
+    continued_fraction_convergent(List.cons(head, List.nil[Nat])).first =
+        continued_fraction_numerator(List.cons(head, List.nil[Nat]))
+}
+
+/// The singleton convergent second projection matches the denominator definition.
+theorem continued_fraction_convergent_singleton_second_eq_denominator(head: Nat) {
+    continued_fraction_convergent(List.cons(head, List.nil[Nat])).second =
+        continued_fraction_denominator(List.cons(head, List.nil[Nat]))
+}
+
+/// The singleton convergent has positive denominator.
+theorem continued_fraction_convergent_singleton_second_positive(head: Nat) {
+    Nat.0 < continued_fraction_convergent(List.cons(head, List.nil[Nat])).second
+}
+
+/// The singleton convergent has nonzero denominator.
+theorem continued_fraction_convergent_singleton_second_ne_zero(head: Nat) {
+    continued_fraction_convergent(List.cons(head, List.nil[Nat])).second != Nat.0
+}
+
+/// A singleton continued fraction has convergent numerator equal to its coefficient.
+theorem continued_fraction_singleton_convergent_first(head: Nat) {
+    ContinuedFraction.singleton(head).convergent.first = head
+}
+
+/// A singleton continued fraction has convergent denominator one.
+theorem continued_fraction_singleton_convergent_second(head: Nat) {
+    ContinuedFraction.singleton(head).convergent.second = Nat.1
+}
+
+/// A two-term continued fraction has denominator equal to its tail coefficient.
+theorem continued_fraction_denominator_pair(head: Nat, next: Nat) {
+    continued_fraction_denominator(List.cons(head, List.cons(next, List.nil[Nat]))) =
+        next
+}
+
+/// The two-term convergent has numerator `head * next + 1`.
+theorem continued_fraction_convergent_pair_first(head: Nat, next: Nat) {
+    continued_fraction_convergent(List.cons(head, List.cons(next, List.nil[Nat]))).first =
+        head * next + Nat.1
+}
+
+/// The two-term convergent has denominator equal to the second coefficient.
+theorem continued_fraction_convergent_pair_second(head: Nat, next: Nat) {
+    continued_fraction_convergent(List.cons(head, List.cons(next, List.nil[Nat]))).second =
+        next
+}
+
+/// The two-term convergent first projection matches the numerator definition.
+theorem continued_fraction_convergent_pair_first_eq_numerator(head: Nat, next: Nat) {
+    continued_fraction_convergent(List.cons(head, List.cons(next, List.nil[Nat]))).first =
+        continued_fraction_numerator(List.cons(head, List.cons(next, List.nil[Nat])))
+}
+
+/// The two-term convergent second projection matches the denominator definition.
+theorem continued_fraction_convergent_pair_second_eq_denominator(head: Nat, next: Nat) {
+    continued_fraction_convergent(List.cons(head, List.cons(next, List.nil[Nat]))).second =
+        continued_fraction_denominator(List.cons(head, List.cons(next, List.nil[Nat])))
+}
+
+/// A two-term convergent with positive second coefficient has positive denominator.
+theorem continued_fraction_convergent_pair_second_positive_of_tail_positive(head: Nat,
+    next: Nat) {
+    Nat.0 < next implies
+        Nat.0 < continued_fraction_convergent(
+            List.cons(head, List.cons(next, List.nil[Nat]))).second
+}
+
+/// A valid two-term convergent has positive denominator.
+theorem continued_fraction_convergent_pair_second_positive(head: Nat, next: Nat) {
+    finite_continued_fraction_coefficients(List.cons(head, List.cons(next, List.nil[Nat])))
+        implies Nat.0 < continued_fraction_convergent(
+            List.cons(head, List.cons(next, List.nil[Nat]))).second
+}
+
+/// A valid two-term convergent has nonzero denominator.
+theorem continued_fraction_convergent_pair_second_ne_zero(head: Nat, next: Nat) {
+    finite_continued_fraction_coefficients(List.cons(head, List.cons(next, List.nil[Nat])))
+        implies continued_fraction_convergent(
+            List.cons(head, List.cons(next, List.nil[Nat]))).second != Nat.0
+}
+
+/// A three-term continued fraction has denominator equal to the tail continuant.
+theorem continued_fraction_denominator_triple(head: Nat, next: Nat, third: Nat) {
+    continued_fraction_denominator(
+        List.cons(head, List.cons(next, List.cons(third, List.nil[Nat])))) =
+        next * third + Nat.1
+}
+
+/// A singleton continued fraction has positive denominator.
+theorem continued_fraction_denominator_singleton_positive(head: Nat) {
+    Nat.0 < continued_fraction_denominator(List.cons(head, List.nil[Nat]))
+}
+
+/// A valid two-term continued fraction has positive denominator.
+theorem continued_fraction_denominator_pair_positive(head: Nat, next: Nat) {
+    finite_continued_fraction_coefficients(List.cons(head, List.cons(next, List.nil[Nat])))
+        implies Nat.0 < continued_fraction_denominator(List.cons(head, List.cons(next, List.nil[Nat])))
+}
+
+/// A valid two-term continued fraction has nonzero denominator.
+theorem continued_fraction_denominator_pair_ne_zero(head: Nat, next: Nat) {
+    finite_continued_fraction_coefficients(List.cons(head, List.cons(next, List.nil[Nat])))
+        implies continued_fraction_denominator(List.cons(head, List.cons(next, List.nil[Nat]))) != Nat.0
+}
+
+/// A two-term continued fraction has denominator equal to the second coefficient.
+theorem continued_fraction_pair_denominator(cf: ContinuedFraction, head: Nat, next: Nat) {
+    cf.coefficients = List.cons(head, List.cons(next, List.nil[Nat]))
+        implies cf.denominator = next
+}
+
+/// A two-term continued fraction has positive denominator.
+theorem continued_fraction_pair_denominator_positive(cf: ContinuedFraction,
+    head: Nat, next: Nat) {
+    cf.coefficients = List.cons(head, List.cons(next, List.nil[Nat]))
+        implies Nat.0 < cf.denominator
+}
+
+/// A three-term continued fraction with positive tail coefficients has positive denominator.
+theorem continued_fraction_denominator_triple_positive_of_tail_positive(head: Nat,
+    next: Nat, third: Nat) {
+    Nat.0 < next and Nat.0 < third implies
+        Nat.0 < continued_fraction_denominator(
+            List.cons(head, List.cons(next, List.cons(third, List.nil[Nat]))))
+}
+
+/// A valid three-term continued fraction has positive denominator.
+theorem continued_fraction_denominator_triple_positive(head: Nat, next: Nat,
+    third: Nat) {
+    finite_continued_fraction_coefficients(
+        List.cons(head, List.cons(next, List.cons(third, List.nil[Nat]))))
+        implies Nat.0 < continued_fraction_denominator(
+            List.cons(head, List.cons(next, List.cons(third, List.nil[Nat]))))
+}
+
+/// A valid three-term continued fraction has nonzero denominator.
+theorem continued_fraction_denominator_triple_ne_zero(head: Nat, next: Nat,
+    third: Nat) {
+    finite_continued_fraction_coefficients(
+        List.cons(head, List.cons(next, List.cons(third, List.nil[Nat]))))
+        implies continued_fraction_denominator(
+            List.cons(head, List.cons(next, List.cons(third, List.nil[Nat])))) != Nat.0
+}
+
+/// A three-term continued fraction has denominator equal to the tail continuant.
+theorem continued_fraction_triple_denominator(cf: ContinuedFraction, head: Nat,
+    next: Nat, third: Nat) {
+    cf.coefficients = List.cons(head, List.cons(next, List.cons(third, List.nil[Nat])))
+        implies cf.denominator = next * third + Nat.1
+}
+
+/// A three-term continued fraction has positive denominator.
+theorem continued_fraction_triple_denominator_positive(cf: ContinuedFraction,
+    head: Nat, next: Nat, third: Nat) {
+    cf.coefficients = List.cons(head, List.cons(next, List.cons(third, List.nil[Nat])))
+        implies Nat.0 < cf.denominator
+}
+
+/// The singleton numerator is the coefficient times the denominator.
+theorem continued_fraction_numerator_singleton_recurrence(head: Nat) {
+    continued_fraction_numerator(List.cons(head, List.nil[Nat])) =
+        head * continued_fraction_denominator(List.cons(head, List.nil[Nat]))
+}
+
+/// The two-term numerator satisfies the first nontrivial continuant recurrence.
+theorem continued_fraction_numerator_pair_recurrence(head: Nat, next: Nat) {
+    continued_fraction_numerator(List.cons(head, List.cons(next, List.nil[Nat]))) =
+        head * continued_fraction_denominator(List.cons(head, List.cons(next, List.nil[Nat]))) +
+            Nat.1
+}
+
+/// The value of a two-term continued fraction is `head + 1 / next`.
+theorem continued_fraction_value_pair(head: Nat, next: Nat) {
+    continued_fraction_value(List.cons(head, List.cons(next, List.nil[Nat]))) =
+        Rat.from_nat(head) + Rat.from_nat(next).inverse
+}
+
+/// The value of a two-term continued fraction is `head + 1 / next`.
+theorem continued_fraction_pair_value(cf: ContinuedFraction, head: Nat, next: Nat) {
+    cf.coefficients = List.cons(head, List.cons(next, List.nil[Nat]))
+        implies cf.value = Rat.from_nat(head) + Rat.from_nat(next).inverse
+}
+
+/// The value of a three-term continued fraction unfolds through the tail pair.
+theorem continued_fraction_value_triple(head: Nat, next: Nat, third: Nat) {
+    continued_fraction_value(List.cons(head, List.cons(next, List.cons(third, List.nil[Nat])))) =
+        Rat.from_nat(head) +
+            (Rat.from_nat(next) + Rat.from_nat(third).inverse).inverse
+}
+
+/// The value of a three-term continued fraction unfolds through the tail pair.
+theorem continued_fraction_triple_value(cf: ContinuedFraction, head: Nat, next: Nat,
+    third: Nat) {
+    cf.coefficients = List.cons(head, List.cons(next, List.cons(third, List.nil[Nat])))
+        implies cf.value =
+            Rat.from_nat(head) +
+                (Rat.from_nat(next) + Rat.from_nat(third).inverse).inverse
+}
+
+/// Adding two singleton continued-fraction values adds their coefficients.
+theorem continued_fraction_value_singleton_add(left: Nat, right: Nat) {
+    continued_fraction_value(List.cons(left, List.nil[Nat])) +
+        continued_fraction_value(List.cons(right, List.nil[Nat])) =
+        Rat.from_nat(left + right)
+}
+
+/// Adding two singleton continued-fraction values adds their coefficients.
+theorem continued_fraction_singleton_value_add(left: Nat, right: Nat) {
+    ContinuedFraction.singleton(left).value + ContinuedFraction.singleton(right).value =
+        Rat.from_nat(left + right)
 }
